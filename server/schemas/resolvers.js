@@ -22,6 +22,7 @@ const resolvers = {
 
       throw new AuthenticationError('Not authenticated');
     },
+},
 
     //business logic
     // order: async (parent, { _id }, context) => {
@@ -67,15 +68,9 @@ const resolvers = {
 
     //   return { session: session.id };
     // },
-  },
-  Mutation: {
-    addUser: async (parent, args) => {
-      const user = await User.create(args);
-      const token = signToken(user);
+//   },
 
-      return { token, user };
-    },
-    
+  Mutation: {
     addMembership: async (parent, { userId, ...otherData }) => {
         const newMembership = new Membership({
             userId,
@@ -85,42 +80,61 @@ const resolvers = {
         return await newMembership.save();
     },
 
-
-    ///
+    signup: async (parent, args) => {
+        const user = await User.create(args);
+        const token = signToken(user);
+        return { token, user };
+    },
 
     updateUser: async (parent, args, context) => {
-      if (context.user) {
-        return await User.findByIdAndUpdate(context.user._id, args, {
-          new: true,
-        });
-      }
-
-      throw AuthenticationError;
+        if (!context.user) {
+            throw new AuthenticationError('You need to be logged in');
+        }
+        if (context.user._id.toString () === args._id || context.user.role === 'admin') {
+            return await User.findByIdAndUpdate(args._id, args, { new: true });
+        }
+        throw new AuthenticationError('Not authorized');
     },
-    updateProduct: async (parent, { _id, quantity }) => {
-      const decrement = Math.abs(quantity) * -1;
 
-      return await Product.findByIdAndUpdate(
-        _id,
-        { $inc: { quantity: decrement } },
-        { new: true }
-      );
+    addMovie: async (parent, args, context) => {
+        if (!context.user) {
+            throw new AuthenticationError('You need to be logged in');
+        }
+        if (context.user.role !== 'admin') {
+            throw new AuthenticationError('You are not an admin!');
+        }
+        return await Movie.create(args);
     },
+
+    updateMovie: async (parent, { movieId, updateData }, context) => {
+        if (!context.user || context.user.role !== 'admin') {
+            throw new AuthenticationError('You need to be logged in and must be an admin');
+        }
+        return await Movie.findByIdAndUpdate(movieId, updateData, { new: true });
+    },
+    
+
+    updateEvent: async (parent, { eventId, updateData }, context) => {
+        if (!context.user || context.user.role !== 'admin') {
+            throw new AuthenticationError('You need to be logged in and must be an admin');
+        }
+        return await Event.findByIdAndUpdate(eventId, updateData, { new: true });
+    },
+
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
 
       if (!user) {
-        throw AuthenticationError;
+        throw new AuthenticationError('Incorrect credentials');
       }
 
       const correctPw = await user.isCorrectPassword(password);
 
       if (!correctPw) {
-        throw AuthenticationError;
+        throw new AuthenticationError('Incorrect credentials');
       }
 
       const token = signToken(user);
-
       return { token, user };
     },
   },

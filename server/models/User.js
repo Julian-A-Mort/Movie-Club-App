@@ -31,6 +31,10 @@ const userSchema = new Schema({
         required: true,
         minlength: 5
     },
+    role: {
+        type: String,
+        default: 'basic'
+    },
     memberships: [
         {
             type: mongoose.Schema.Types.ObjectId,
