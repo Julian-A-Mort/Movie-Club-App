@@ -4,12 +4,20 @@ const mongoose = require('mongoose');
 const path = require('path');
 const { typeDefs, resolvers } = require('./schemas');
 const { authMiddleware } = require('./utils/auth');
+require('dotenv').config();
 
+if (!process.env.JWT_SECRET || !process.env.MONGODB_URI) {
+    console.error("Missing critical environment variables. Exiting...");
+    process.exit(1);
+  }
 
 const app = express();
 
 // Mongoose connection 
-mongoose.connect('your-mongodb-connection-string', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.MONGODB_URI || 'fallback-mongodb-uri', { 
+    useNewUrlParser: true, 
+    useUnifiedTopology: true 
+});
 
 // Body parsers for JSON and URL-encoded data
 app.use(express.json());
