@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // add website
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/dbname', {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/goblinmovieapp', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
@@ -14,3 +14,5 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/dbname', 
 // });
 
 module.exports = mongoose.connection;
+
+// other external API
