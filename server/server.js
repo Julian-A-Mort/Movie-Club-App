@@ -7,9 +7,9 @@ const { authMiddleware } = require('./utils/auth');
 require('dotenv').config();
 
 if (!process.env.JWT_SECRET || !process.env.MONGODB_URI) {
-    console.error("Missing critical environment variables. Exiting...");
-    process.exit(1);
-  }
+  console.error("Missing critical environment variables. Exiting...");
+  process.exit(1);
+}
 
 const app = express();
 

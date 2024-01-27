@@ -3,9 +3,6 @@ const bcrypt = require('bcrypt');
 
 const { Schema } = mongoose;
 
-// if needing to require models
-// const ? = require('./?');
-
 const userSchema = new Schema({
     userName: {
         type: String,
@@ -34,6 +31,12 @@ const userSchema = new Schema({
         required: true,
         minlength: 5
     },
+    memberships: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Membership'
+        }
+    ]
 }, { timestamps: true });
 
 
