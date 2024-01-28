@@ -4,7 +4,8 @@ import { Box, Image, Text, Badge } from '@chakra-ui/react';
 const MovieCard = ({ movie }) => {
   return (
     <Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden">
-      <Image src={movie.imageUrl} alt={`Cover for ${movie.title}`} />
+      {/* Use posterPath for the image source */}
+      <Image src={movie.posterPath} alt={`Cover for ${movie.title}`} />
 
       <Box p="6">
         <Box d="flex" alignItems="baseline">

@@ -121,7 +121,20 @@ const typeDefs = `
             email: String!
             password: String!
         ): Auth
+
+        signup(
+            userName: String!
+            firstName: String!
+            lastName: String!
+            email: String!
+            password: String!
+        ): AuthPayload
     
+    }
+    
+    type AuthPayload {
+        token: String!
+        user: User
     }
 
     `;
