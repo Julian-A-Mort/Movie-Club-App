@@ -1,5 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
+import { ChakraProvider } from '@chakra-ui/react';
 
 function App() {
   return (
@@ -21,5 +22,14 @@ function App() {
     </div>
   );
 }
+
+// Import Chakra UI
+// function App() {
+//   return (
+//     <ChakraProvider>
+//       {/* Your App Components */}
+//     </ChakraProvider>
+//   );
+// }
 
 export default App;
