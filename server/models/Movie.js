@@ -2,9 +2,6 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-// if needing to require models
-// const ? = require('./?');
-
 const movieSchema = new Schema({
     title: {
         type: String,
@@ -29,9 +26,14 @@ const movieSchema = new Schema({
         type: String,
         required: true,
     },
-    // image: {
-    //     type: String
-    //   },
+    posterPath: {
+        type: String,
+        required: true
+    },
+    tmdbId: { 
+        type: String,
+        required: true
+    },
 });
 
 const Movie = mongoose.model('Movie', movieSchema);

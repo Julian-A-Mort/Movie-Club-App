@@ -1,5 +1,6 @@
 const { User, Movie, Membership, Event } = require('../models');
 const { signToken, AuthenticationError } = require('../utils/auth');
+const axios = require('axios'); 
 
 // const stripe = require('stripe')('insert numbers');
 
@@ -14,6 +15,9 @@ const resolvers = {
     memberships: async () => {
         return await Membership.find();
     },
+    tmdbId: async () => {
+        return process.env.MOVIE_API_KEY;
+    },
     user: async (parent, args, context) => {
       if (context.user) {
         const user = await User.findById(context.user._id).populate('memberships');
@@ -22,7 +26,29 @@ const resolvers = {
 
       throw new AuthenticationError('Not authenticated');
     },
+
+    // Query for if movie poster needs to be fetched outside normal function
+    movieDetails: async (parent, { tmdbId }) => {
+        // Check if the movie already exists in the database
+        let movie = await Movie.findOne({ tmdbId });
+        if (!movie) {
+            // Movie not in database, fetch from TMDb API
+            try {
+                const response = await axios.get(`https://api.themoviedb.org/3/movie/${tmdbId}?api_key=${process.env.MOVIE_API_KEY}`);
+                const posterPath = `https://image.tmdb.org/t/p/original${response.data.poster_path}`;
+
+                // Create new movie in the database with the fetched poster path
+                movie = new Movie({ tmdbId, posterPath });
+                await movie.save();
+            } catch (error) {
+                throw new Error('Failed to fetch movie details from TMDb');
+            }
+        }
+        return movie; // Return the movie data (which now includes the poster path)
+    },
 },
+
+
 
     //business logic
     // order: async (parent, { _id }, context) => {
