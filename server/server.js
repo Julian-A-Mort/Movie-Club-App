@@ -1,5 +1,6 @@
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
+const { MongoClient, ServerApiVersion } = require('mongodb');
 const mongoose = require('mongoose');
 const path = require('path');
 const { typeDefs, resolvers } = require('./schemas');
@@ -12,6 +13,21 @@ if (!process.env.JWT_SECRET || !process.env.MONGODB_URI) {
 }
 
 const app = express();
+const uri = process.env.MONGODB_URI;
+const client = new MongoClient(uri, {
+  serverApi: ServerApiVersion.v1
+});
+
+//connect to MongoDB
+async function connectToMongoDB() {
+    try {
+      await client.connect();
+      console.log("Connected to MongoDB");
+  
+    } catch (error) {
+      console.error("Failed to connect to MongoDB", error);
+    }
+  }
 
 // Mongoose connection 
 mongoose.connect(process.env.MONGODB_URI || 'fallback-mongodb-uri', { 
@@ -47,4 +63,5 @@ if (process.env.NODE_ENV === 'production') {
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
+    connectToMongoDB();
 });
