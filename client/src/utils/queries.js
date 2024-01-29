@@ -1,25 +1,58 @@
-import { gql, useQuery } from '@apollo/client';
+import { gql } from '@apollo/client';
 
-const GET_MOVIES = gql`
+// Queries
+export const GET_MOVIES = gql`
   query GetMovies {
     movies {
       _id
       title
       description
-      // ... other movie fields
+      releaseYear
+      genre
+      director
+      image
     }
   }
 `;
 
-// Inside a React component
-const { loading, error, data } = useQuery(GET_MOVIES);
-if (loading) return 'Loading...';
-if (error) return `Error! ${error.message}`;
+export const GET_USERS = gql`
+  query GetUsers {
+    users {
+      _id
+      userName
+      firstName
+      lastName
+      email
+      role
+    }
+  }
+`;
 
-return (
-  <div>
-    {data.movies.map(movie => (
-      <div key={movie._id}>{movie.title}</div>
-    ))}
-  </div>
-);
+export const GET_MEMBERSHIPS = gql`
+  query GetMemberships {
+    memberships {
+      _id
+      title
+      description
+      startDate
+      endDate
+      status
+      userId
+    }
+  }
+`;
+
+export const GET_EVENTS = gql`
+  query GetEvents {
+    events {
+      _id
+      title
+      description
+      date
+      movie {
+        _id
+        title
+      }
+    }
+  }
+`;
