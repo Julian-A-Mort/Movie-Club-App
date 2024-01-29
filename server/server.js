@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 // const { MongoClient, ServerApiVersion } = require('mongodb'); not required?
@@ -5,7 +6,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 const { typeDefs, resolvers } = require('./schemas');
 const { authMiddleware } = require('./utils/auth');
-require('dotenv').config();
+
 
 if (!process.env.JWT_SECRET || !process.env.MONGODB_URI) {
   console.error("Missing critical environment variables. Exiting...");
@@ -20,12 +21,9 @@ const app = express();
 // });
 
 // Mongoose connection 
-mongoose.connect(process.env.MONGODB_URI, { 
-    useNewUrlParser: true, 
-    useUnifiedTopology: true 
-})
-.then(() => console.log('Connected to MongoDB'))
-.catch(err => console.error('Failed to connect to MongoDB', err));
+mongoose.connect(process.env.MONGODB_URI)
+.then(() => console.log("MongoDB successfully connected"))
+.catch(err => console.error("MongoDB connection error:", err));
 
 // //connect to MongoDB
 // async function connectToMongoDB() {
