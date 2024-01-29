@@ -1,6 +1,6 @@
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+// const { MongoClient, ServerApiVersion } = require('mongodb'); not required?
 const mongoose = require('mongoose');
 const path = require('path');
 const { typeDefs, resolvers } = require('./schemas');
@@ -13,27 +13,30 @@ if (!process.env.JWT_SECRET || !process.env.MONGODB_URI) {
 }
 
 const app = express();
-const uri = process.env.MONGODB_URI;
-const client = new MongoClient(uri, {
-  serverApi: ServerApiVersion.v1
-});
 
-//connect to MongoDB
-async function connectToMongoDB() {
-    try {
-      await client.connect();
-      console.log("Connected to MongoDB");
-  
-    } catch (error) {
-      console.error("Failed to connect to MongoDB", error);
-    }
-  }
+// const uri = process.env.MONGODB_URI;
+// const client = new MongoClient(uri, {
+//   serverApi: ServerApiVersion.v1
+// });
 
 // Mongoose connection 
-mongoose.connect(process.env.MONGODB_URI || 'fallback-mongodb-uri', { 
+mongoose.connect(process.env.MONGODB_URI, { 
     useNewUrlParser: true, 
     useUnifiedTopology: true 
-});
+})
+.then(() => console.log('Connected to MongoDB'))
+.catch(err => console.error('Failed to connect to MongoDB', err));
+
+// //connect to MongoDB
+// async function connectToMongoDB() {
+//     try {
+//       await client.connect();
+//       console.log("Connected to MongoDB");
+  
+//     } catch (error) {
+//       console.error("Failed to connect to MongoDB", error);
+//     }
+//   }
 
 // Body parsers for JSON and URL-encoded data
 app.use(express.json());
@@ -49,19 +52,24 @@ const apolloServer = new ApolloServer({
     context: ({ req }) => ({ user: req.user }) // Pass the user context to resolvers
 });
 
-apolloServer.applyMiddleware({ app, path: '/graphql' });
+async function startServer() {
+    await apolloServer.start();
+    apolloServer.applyMiddleware({ app, path: '/graphql' });
 
-// Serve static files from the React app in production
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '../client/build/')));
+    // Serve static files from the React app in production
+    if (process.env.NODE_ENV === 'production') {
+        app.use(express.static(path.join(__dirname, '../client/build')));
 
-    app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+        app.get('*', (req, res) => {
+            res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+        });
+    }
+
+    // Start Express server
+    const PORT = process.env.PORT || 4000;
+    app.listen(PORT, () => {
+        console.log(`Server is running on http://localhost:${PORT}`);
     });
 }
 
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-    connectToMongoDB();
-});
+startServer();

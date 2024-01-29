@@ -15,9 +15,6 @@ const resolvers = {
     memberships: async () => {
         return await Membership.find();
     },
-    tmdbId: async () => {
-        return process.env.MOVIE_API_KEY;
-    },
     user: async (parent, args, context) => {
       if (context.user) {
         const user = await User.findById(context.user._id).populate('memberships');
@@ -25,26 +22,6 @@ const resolvers = {
       }
 
       throw new AuthenticationError('Not authenticated');
-    },
-
-    // Query for if movie poster needs to be fetched outside normal function
-    movieDetails: async (parent, { tmdbId }) => {
-        // Check if the movie already exists in the database
-        let movie = await Movie.findOne({ tmdbId });
-        if (!movie) {
-            // Movie not in database, fetch from TMDb API
-            try {
-                const response = await axios.get(`https://api.themoviedb.org/3/movie/${tmdbId}?api_key=${process.env.MOVIE_API_KEY}`);
-                const posterPath = `https://image.tmdb.org/t/p/original${response.data.poster_path}`;
-
-                // Create new movie in the database with the fetched poster path
-                movie = new Movie({ tmdbId, posterPath });
-                await movie.save();
-            } catch (error) {
-                throw new Error('Failed to fetch movie details from TMDb');
-            }
-        }
-        return movie; // Return the movie data (which now includes the poster path)
     },
 },
 
@@ -97,56 +74,77 @@ const resolvers = {
 //   },
 
   Mutation: {
-    addMembership: async (parent, { userId, ...otherData }) => {
-        const newMembership = new Membership({
-            userId,
-            ...otherData,
-            endDate: new Date(Date.now() + 100 * 24 * 60 * 60 * 1000)
-        });
-        return await newMembership.save();
-    },
-
-    signup: async (parent, args) => {
-        const user = await User.create(args);
+    //user mutations
+    signup: async (parent, { userName, firstName, lastName, email, password }) => {
+        const user = await User.create({ userName, firstName, lastName, email, password });
         const token = signToken(user);
         return { token, user };
     },
 
-    updateUser: async (parent, args, context) => {
+    updateUser: async (parent, { _id, userName, firstName, lastName, email }, context) => {
         if (!context.user) {
             throw new AuthenticationError('You need to be logged in');
         }
-        if (context.user._id.toString () === args._id || context.user.role === 'admin') {
-            return await User.findByIdAndUpdate(args._id, args, { new: true });
+        if (context.user._id.toString() === _id || context.user.role === 'admin') {
+            return await User.findByIdAndUpdate(_id, { userName, firstName, lastName, email }, { new: true });
         }
         throw new AuthenticationError('Not authorized');
     },
-
-    addMovie: async (parent, args, context) => {
-        if (!context.user) {
-            throw new AuthenticationError('You need to be logged in');
-        }
-        if (context.user.role !== 'admin') {
-            throw new AuthenticationError('You are not an admin!');
-        }
-        return await Movie.create(args);
-    },
-
-    updateMovie: async (parent, { movieId, updateData }, context) => {
-        if (!context.user || context.user.role !== 'admin') {
-            throw new AuthenticationError('You need to be logged in and must be an admin');
-        }
-        return await Movie.findByIdAndUpdate(movieId, updateData, { new: true });
-    },
     
 
-    updateEvent: async (parent, { eventId, updateData }, context) => {
+    deleteUser: async (parent, { _id }, context) => {
+        return await User.findByIdAndDelete(_id);
+    },
+
+    //movie mutations
+    addMovie: async (parent, { title, description, releaseYear, genre, director, image }, context) => {
         if (!context.user || context.user.role !== 'admin') {
             throw new AuthenticationError('You need to be logged in and must be an admin');
         }
-        return await Event.findByIdAndUpdate(eventId, updateData, { new: true });
+        return await Movie.create({ title, description, releaseYear, genre, director, image });
     },
 
+    updateMovie: async (parent, { _id, title, description, releaseYear, genre, director, image }, context) => {
+        if (!context.user || context.user.role !== 'admin') {
+            throw new AuthenticationError('You need to be logged in and must be an admin');
+        }
+        return await Movie.findByIdAndUpdate(_id, { title, description, releaseYear, genre, director, image }, { new: true });
+    },    
+
+    deleteMovie: async (parent, { _id }, context) => {
+        return await Movie.findByIdAndDelete(_id);
+    },
+
+    //membership mutations
+    addMembership: async (parent, { title, description, startDate, endDate, status, userId }, context) => {
+        return await Membership.create({ title, description, startDate, endDate, status, userId });
+    },
+
+    updateMembership: async (parent, { _id, title, description, startDate, endDate, status }, context) => {
+        return await Membership.findByIdAndUpdate(_id, { title, description, startDate, endDate, status }, { new: true });
+    },
+
+    deleteMembership: async (parent, { _id }, context) => {
+        return await Membership.findByIdAndDelete(_id);
+    },
+
+    //event mutations
+    addEvent: async (parent, { title, description, date, movie }, context) => {
+        return await Event.create({ title, description, date, movie });
+    },    
+
+    updateEvent: async (parent, { _id, title, description, date, movie }, context) => {
+        if (!context.user || context.user.role !== 'admin') {
+            throw new AuthenticationError('You need to be logged in and must be an admin');
+        }
+        return await Event.findByIdAndUpdate(_id, { title, description, date, movie }, { new: true });
+    },    
+
+    deleteEvent: async (parent, { _id }, context) => {
+        return await Event.findByIdAndDelete(_id);
+    },
+
+    //login mutation
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
 

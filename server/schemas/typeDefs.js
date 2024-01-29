@@ -51,7 +51,7 @@ const typeDefs = `
     }
 
     type Mutation {
-        createUser(
+        signup(
             userName: String!
             firstName: String!
             lastName: String!
@@ -69,7 +69,7 @@ const typeDefs = `
 
         deleteUser(_id: ID!): User
 
-        createMovie(
+        addMovie(
             title: String!
             description: String!
             releaseYear: Int!
@@ -78,16 +78,17 @@ const typeDefs = `
             image: String
         ): Movie
 
-        deleteMovie(_id: ID!): Movie
+        updateMovie(
+            _id: ID!
+            title: String
+            description: String
+            releaseYear: Int
+            genre: String
+            director: String
+            image: String
+        ): Movie
 
-        createMembership(
-            title: String!
-            description: String!
-            startDate: String!
-            endDate: String!
-            status: String!
-            userId: ID!
-        ): Membership
+        deleteMovie(_id: ID!): Movie
 
         updateMembership(
             _id: ID!
@@ -98,9 +99,18 @@ const typeDefs = `
             status: String
         ): Membership
 
+        addMembership(
+            userId: ID!
+            title: String!
+            description: String!
+            startDate: String!
+            endDate: String!
+            status: String!
+          ): Membership
+
         deleteMembership(_id: ID!): Membership
 
-        createEvent(
+        addEvent(
             title: String!
             description: String!
             date: String!
@@ -121,14 +131,6 @@ const typeDefs = `
             email: String!
             password: String!
         ): Auth
-
-        signup(
-            userName: String!
-            firstName: String!
-            lastName: String!
-            email: String!
-            password: String!
-        ): AuthPayload
     
     }
     
