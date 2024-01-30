@@ -25,13 +25,13 @@ function SignupModal({ isOpen, onClose }) {
   const handleSignup = async () => {
     try {
       const { data } = await signup({ variables: { userName, email, password } });
-      // Handle the response, store the token, redirect user, etc.
-      console.log(data);
+      localStorage.setItem('jwtToken', data.signup.token); // Storing the token
       onClose();
     } catch (err) {
       console.error('Signup error:', err);
     }
   };
+  
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

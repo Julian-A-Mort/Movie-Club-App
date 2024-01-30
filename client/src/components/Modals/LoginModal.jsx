@@ -23,13 +23,13 @@ function LoginModal({ isOpen, onClose }) {
   const handleLogin = async () => {
     try {
       const { data } = await login({ variables: { email, password } });
-      // Handle the response, store the token, redirect user, etc.
-      console.log(data);
+      localStorage.setItem('jwtToken', data.login.token); // Storing the token
       onClose();
     } catch (err) {
       console.error('Login error:', err);
     }
   };
+  
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
