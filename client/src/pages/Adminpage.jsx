@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Button } from '@chakra-ui/react';
 import Header from '../components/Header';
 import NavBar from '../components/NavBar';
-import EditModal from '../components/EditModal';
+import EditModal from '../components/Modals/EditModal';
 
 const AdminPage = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);

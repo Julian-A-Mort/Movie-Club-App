@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
+import AuthService from '../utils/auth';
 import { SIGNUP_MUTATION } from '../../utils/mutations';
 
 import {
@@ -25,8 +26,9 @@ function SignupModal({ isOpen, onClose }) {
   const handleSignup = async () => {
     try {
       const { data } = await signup({ variables: { userName, email, password } });
-      localStorage.setItem('jwtToken', data.signup.token); // Storing the token
-      onClose();
+      if (data.signup.token) {
+        AuthService.login(data.signup.token); // Store the token and redirect
+      }
     } catch (err) {
       console.error('Signup error:', err);
     }
