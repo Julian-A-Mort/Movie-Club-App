@@ -12,6 +12,18 @@ export const SIGNUP_MUTATION = gql`
   }
 `;
 
+export const LOGIN_MUTATION = gql`
+  mutation Login($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      token
+      user {
+        _id
+        email
+      }
+    }
+  }
+`;
+
 // User Mutations
 export const UPDATE_USER = gql`
   mutation UpdateUser($_id: ID!, $userName: String, $firstName: String, $lastName: String, $email: String) {

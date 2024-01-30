@@ -1,11 +1,12 @@
 import './App.css';
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LandingPage from './pages/Landing';
 import AdminPage from './pages/Adminpage';
+import MainPage from './pages/Mainpage';
 import LoginModal from './components/Modals/LoginModal';
 import SignupModal from './components/Modals/SignupModal';
-import ProtectedRoute from './components/ProtectedRoute';
+import ProtectedRoute from './components/ProtectedPage/index';
 import Header from './components/Header/index';
 import NavBar from './components/NavBar/index';
 
@@ -19,18 +20,12 @@ function App() {
       <Header />
       <NavBar />
 
-      <Switch>
-        <Route exact path="/" render={() => (
-          <LandingPage 
-            onOpenLogin={() => setIsLoginOpen(true)} 
-            onOpenSignup={() => setIsSignupOpen(true)} 
-          />
-        )} />
-        <ProtectedRoute path="/admin" component={AdminPage} />
-        <Route path="/main" component={MainPage} />
-
+      <Routes>
+        <Route exact path="/" element={<LandingPage onOpenLogin={() => setIsLoginOpen(true)} onOpenSignup={() => setIsSignupOpen(true)} />} />
+        <Route path="/main" element={<MainPage />} />
+        <Route path="/admin" element={<ProtectedRoute component={AdminPage} />} />
         {/* Add other routes as needed */}
-      </Switch>
+      </Routes>
 
       {/* Login and Signup Modals */}
       <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />

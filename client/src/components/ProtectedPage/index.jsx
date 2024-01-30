@@ -1,11 +1,9 @@
 import React from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import AuthService from '../../utils/auth';
 
-const ProtectedRoute = ({ component: Component, ...rest }) => (
-  <Route {...rest} render={props => (
-    AuthService.loggedIn() ? <Component {...props} /> : <Redirect to="/login" />
-  )} />
-);
+const ProtectedRoute = ({ component }) => {
+  return AuthService.loggedIn() ? component : <Navigate to="/" />;
+};
 
 export default ProtectedRoute;

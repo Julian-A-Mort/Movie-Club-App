@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
-import AuthService from '../utils/auth';
-import { LOGIN_MUTATION } from '../../utils/mutations'; // Import the login mutation
+import AuthService from '../../utils/auth';
+import { LOGIN_MUTATION } from '../../utils/mutations';
 import {
   Modal,
   ModalOverlay,

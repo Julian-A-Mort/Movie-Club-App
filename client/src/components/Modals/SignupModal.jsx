@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
-import AuthService from '../utils/auth';
+import AuthService from '../../utils/auth';
 import { SIGNUP_MUTATION } from '../../utils/mutations';
 
 import {
