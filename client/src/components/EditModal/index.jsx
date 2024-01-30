@@ -26,15 +26,16 @@ import {
   DELETE_EVENT
 } from '../../utils/mutations';
 import {
-    GET_MOVIES,
-    GET_USERS,
-    GET_MEMBERSHIPS,
-    GET_EVENTS
-  } from '../../utils/queries';
+  GET_MOVIES,
+  GET_USERS,
+  GET_MEMBERSHIPS,
+  GET_EVENTS
+} from '../../utils/queries';
 
 const EditModal = ({ modelType }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [searchTerm, setSearchTerm] = useState('');
+  const [editableItem, setEditableItem] = useState(null);
 
   // Fetch data based on modelType
   let query;
@@ -54,49 +55,62 @@ const EditModal = ({ modelType }) => {
     default:
       query = null;
   }
+
   const { data, loading, error } = useQuery(query);
 
-  // Update and delete handlers (placeholders)
-  const [updateItem] = useMutation(UPDATE_MOVIE); // Replace with actual mutations
-  const [deleteItem] = useMutation(DELETE_MOVIE); // Replace with actual mutations
+  // Mutations based on modelType
+  const [updateItem] = useMutation(
+    modelType === 'movies' ? UPDATE_MOVIE :
+    modelType === 'users' ? UPDATE_USER :
+    modelType === 'memberships' ? UPDATE_MEMBERSHIP : UPDATE_EVENT
+  );
 
-  const handleUpdate = async (id, updatedData) => {
-    await updateItem({ variables: { id, ...updatedData } });
-    onClose();
+  const [deleteItem] = useMutation(
+    modelType === 'movies' ? DELETE_MOVIE :
+    modelType === 'users' ? DELETE_USER :
+    modelType === 'memberships' ? DELETE_MEMBERSHIP : DELETE_EVENT
+  );
+
+  // Function to handle form changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEditableItem(prev => ({ ...prev, [name]: value }));
   };
 
+  // Function to submit update
+  const handleSubmitUpdate = async () => {
+    await updateItem({ variables: { id: editableItem._id, ...editableItem } });
+    setEditableItem(null); // Reset editable item
+    onClose(); // Close modal
+  };
+
+  // Function to handle delete
   const handleDelete = async (id) => {
     await deleteItem({ variables: { id } });
     onClose();
   };
+
+  // Function to open edit form for a specific item
+  const openEditForm = (item) => {
+    setEditableItem(item);
+    onOpen();
+  };
+
+  // Filter items based on searchTerm
+  const filteredItems = data ? data[modelType].filter(item => {
+    const itemValue = item.title || item.userName || item.description || "";
+    return itemValue.toLowerCase().includes(searchTerm.toLowerCase());
+  }) : [];
 
   // Render items
   const renderItems = () => {
     if (loading) return <Text>Loading...</Text>;
     if (error) return <Text>Error: {error.message}</Text>;
 
-    let items;
-    switch (modelType) {
-      case 'movies':
-        items = data.movies;
-        break;
-      case 'users':
-        items = data.users;
-        break;
-      case 'memberships':
-        items = data.memberships;
-        break;
-      case 'events':
-        items = data.events;
-        break;
-      default:
-        items = [];
-    }
-
-    return items.map((item) => (
+    return filteredItems.map((item) => (
       <VStack key={item._id} align="stretch" spacing={2}>
         <Text>{item.title || item.userName || item.description}</Text>
-        <Button colorScheme="blue" onClick={() => handleUpdate(item._id, {})}>Edit</Button>
+        <Button colorScheme="blue" onClick={() => openEditForm(item)}>Edit</Button>
         <Button colorScheme="red" onClick={() => handleDelete(item._id)}>Delete</Button>
       </VStack>
     ));
@@ -105,21 +119,33 @@ const EditModal = ({ modelType }) => {
   return (
     <>
       <Button onClick={onOpen}>Edit {modelType}</Button>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={() => { onClose(); setEditableItem(null); }}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Edit {modelType}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Input
-              placeholder={`Search ${modelType}...`}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            {renderItems()}
+            {editableItem ? (
+              // Form for editing the selected item
+              <Box as="form" onSubmit={(e) => e.preventDefault()}>
+                {/* Generate input fields based on editableItem properties */}
+                <Input name="title" value={editableItem.title || ''} onChange={handleChange} />
+                {/* Similar inputs for other properties */}
+                <Button mt={4} colorScheme="blue" onClick={handleSubmitUpdate}>Update</Button>
+              </Box>
+            ) : (
+              <>
+                <Input
+                  placeholder={`Search ${modelType}...`}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                {renderItems()}
+              </>
+            )}
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" onClick={onClose}>Close</Button>
+            {!editableItem && <Button colorScheme="blue" onClick={onClose}>Close</Button>}
           </ModalFooter>
         </ModalContent>
       </Modal>
