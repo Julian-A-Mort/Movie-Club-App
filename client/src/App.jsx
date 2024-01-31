@@ -17,8 +17,6 @@ function App() {
 
   return (
     <Router>
-      <Header />
-      <NavBar />
 
       <Routes>
         <Route exact path="/" element={<LandingPage onOpenLogin={() => setIsLoginOpen(true)} onOpenSignup={() => setIsSignupOpen(true)} />} />

@@ -6,6 +6,9 @@ export const SIGNUP_MUTATION = gql`
       token
       user {
         _id
+        userName
+        firstName
+        lastName
         email
       }
     }

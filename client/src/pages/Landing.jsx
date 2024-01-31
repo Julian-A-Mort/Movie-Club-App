@@ -18,7 +18,6 @@ function LandingPage() {
   return (
     <Box>
       <Header />
-      <NavBar />
       <Center py={5}>
         <VStack spacing={4}>
           <Button colorScheme="blue" onClick={openLoginModal}>

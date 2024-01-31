@@ -75,10 +75,24 @@ const resolvers = {
 
   Mutation: {
     //user mutations
+    // signup: async (parent, { userName, firstName, lastName, email, password }) => {
+    //     const user = await User.create({ userName, firstName, lastName, email, password });
+    //     const token = signToken(user);
+    //     return { token, user };
+    // },
+
     signup: async (parent, { userName, firstName, lastName, email, password }) => {
-        const user = await User.create({ userName, firstName, lastName, email, password });
-        const token = signToken(user);
-        return { token, user };
+        console.log(`Signup Request: `, { userName, firstName, lastName, email, password });
+        try {
+            const user = await User.create({ userName, firstName, lastName, email, password });
+            const token = signToken(user);
+            console.log(`Signup Success: `, { user, token });
+            return { token, user };
+        } catch (error) {
+            console.error(`Signup Error: `, error);
+            // You might want to handle different types of errors differently
+            throw new Error('Error signing up');
+        }
     },
 
     updateUser: async (parent, { _id, userName, firstName, lastName, email }, context) => {

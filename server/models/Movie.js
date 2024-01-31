@@ -32,7 +32,7 @@ const movieSchema = new Schema({
     },
     tmdbId: { 
         type: String,
-        required: true
+        required: false
     },
 });
 

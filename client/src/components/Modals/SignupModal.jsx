@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import AuthService from '../../utils/auth';
 import { SIGNUP_MUTATION } from '../../utils/mutations';
-
 import {
   Modal,
   ModalOverlay,
@@ -15,25 +14,33 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Box,
 } from '@chakra-ui/react';
 
 function SignupModal({ isOpen, onClose }) {
   const [userName, setUserName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [signup, { loading, error }] = useMutation(SIGNUP_MUTATION);
+  const [successMsg, setSuccessMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
 
   const handleSignup = async () => {
     try {
-      const { data } = await signup({ variables: { userName, email, password } });
+      const { data } = await signup({ variables: { userName, firstName, lastName, email, password } });
       if (data.signup.token) {
         AuthService.login(data.signup.token); // Store the token and redirect
+        setSuccessMsg('Thank you for signing up!');
+        setErrorMsg('');
       }
     } catch (err) {
       console.error('Signup error:', err);
+      setSuccessMsg('');
+      setErrorMsg('Error signing up. Please try again.');
     }
   };
-  
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -48,6 +55,22 @@ function SignupModal({ isOpen, onClose }) {
               placeholder="Choose a username"
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
+            />
+          </FormControl>
+          <FormControl mt={4}>
+            <FormLabel>First Name</FormLabel>
+            <Input
+              placeholder="Enter your first name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+          </FormControl>
+          <FormControl mt={4}>
+            <FormLabel>Last Name</FormLabel>
+            <Input
+              placeholder="Enter your last name"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
             />
           </FormControl>
           <FormControl mt={4}>
@@ -68,6 +91,10 @@ function SignupModal({ isOpen, onClose }) {
             />
           </FormControl>
         </ModalBody>
+
+        {successMsg && <Box color="green.500" p={2}>{successMsg}</Box>}
+        {errorMsg && <Box color="red.500" p={2}>{errorMsg}</Box>}
+
         <ModalFooter>
           <Button colorScheme="blue" mr={3} onClick={handleSignup}>
             Sign Up

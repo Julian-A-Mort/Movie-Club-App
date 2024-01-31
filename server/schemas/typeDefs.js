@@ -57,7 +57,7 @@ const typeDefs = `
             lastName: String!
             email: String!
             password: String!
-        ): User
+        ): AuthPayload
 
         updateUser(
             _id: ID!
