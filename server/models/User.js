@@ -35,10 +35,6 @@ const userSchema = new Schema({
         type: String,
         default: 'basic'
     },
-    movieapinumber: {
-        type: String,
-        required: true
-    },
     memberships: [
         {
             type: mongoose.Schema.Types.ObjectId,

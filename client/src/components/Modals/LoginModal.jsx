@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import AuthService from '../../utils/auth';
 import { LOGIN_MUTATION } from '../../utils/mutations';
+import { useNavigate } from 'react-router-dom';
 import {
   Modal,
   ModalOverlay,
@@ -17,9 +18,10 @@ import {
 } from '@chakra-ui/react';
 
 function LoginModal({ isOpen, onClose }) {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [login, { loading, error }] = useMutation(LOGIN_MUTATION);
+  const [login] = useMutation(LOGIN_MUTATION);
 
   const handleLogin = async () => {
     try {
@@ -31,7 +33,6 @@ function LoginModal({ isOpen, onClose }) {
       console.error('Login error:', err);
     }
   };
-  
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

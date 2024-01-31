@@ -7,8 +7,8 @@ import MainPage from './pages/Mainpage';
 import LoginModal from './components/Modals/LoginModal';
 import SignupModal from './components/Modals/SignupModal';
 import ProtectedRoute from './components/ProtectedPage/index';
-import Header from './components/Header/index';
-import NavBar from './components/NavBar/index';
+// import Header from './components/Header/index';
+// import NavBar from './components/NavBar/index';
 
 function App() {
   // State for controlling login and signup modals
