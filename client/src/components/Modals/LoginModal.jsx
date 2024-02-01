@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-import { useMutation } from '@apollo/client';
-import AuthService from '../../utils/auth';
-import { LOGIN_MUTATION } from '../../utils/mutations';
-import { useNavigate } from 'react-router-dom';
+import useLogin from '../../utils/login';
 import {
   Modal,
   ModalOverlay,
@@ -15,19 +12,20 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Alert,
+  AlertIcon,
 } from '@chakra-ui/react';
 
 function LoginModal({ isOpen, onClose }) {
-  const navigate = useNavigate();
+  const { login, loading, error } = useLogin(); // Use the useLogin hook
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [login] = useMutation(LOGIN_MUTATION);
 
   const handleLogin = async () => {
     try {
-      const { data } = await login({ variables: { email, password } });
-      if (data.login.token) {
-        AuthService.login(data.login.token); // Store the token and redirect
+      await login(email, password);
+      if (!error) {
+        onClose(); // Close the modal after successful login
       }
     } catch (err) {
       console.error('Login error:', err);
@@ -41,6 +39,12 @@ function LoginModal({ isOpen, onClose }) {
         <ModalHeader>Login</ModalHeader>
         <ModalCloseButton />
         <ModalBody pb={6}>
+          {error && (
+            <Alert status="error" mb={4}>
+              <AlertIcon />
+              {error.message || 'An error occurred'} {/* Display the error message */}
+            </Alert>
+          )}
           <FormControl>
             <FormLabel>Email</FormLabel>
             <Input
@@ -60,7 +64,7 @@ function LoginModal({ isOpen, onClose }) {
           </FormControl>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={handleLogin}>
+          <Button colorScheme="blue" mr={3} onClick={handleLogin} isLoading={loading}>
             Login
           </Button>
           <Button onClick={onClose}>Cancel</Button>

@@ -1,6 +1,8 @@
 const { User, Movie, Membership, Event } = require('../models');
 const { signToken, AuthenticationError } = require('../utils/auth');
 const axios = require('axios'); 
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 // const stripe = require('stripe')('insert numbers');
 
@@ -159,23 +161,40 @@ const resolvers = {
     },
 
     //login mutation
-    login: async (parent, { email, password }) => {
-      const user = await User.findOne({ email });
-
-      if (!user) {
-        throw new AuthenticationError('Incorrect credentials');
-      }
-
-      const correctPw = await user.isCorrectPassword(password);
-
-      if (!correctPw) {
-        throw new AuthenticationError('Incorrect credentials');
-      }
-
-      const token = signToken(user);
-      return { token, user };
+    login: async (_, { email, password }) => {
+        // Find user by email
+        const user = await User.findOne({ email });
+        if (!user) {
+          throw new Error('User not found');
+        }
+  
+        // Check if password is correct
+        const valid = await bcrypt.compare(password, user.password);
+        if (!valid) {
+          throw new Error('Invalid password');
+        }
+  
+        // Generate JWT token
+        const token = generateToken(user);
+  
+        // Return the authentication token and user info
+        return {
+          token,
+          user,
+        };
+      },
     },
-  },
-};
+  };
+  
+  // This function is called after verifying the user's credentials
+  function generateToken(user) {
+    const tokenPayload = {
+      id: user.id,
+      userName: user.userName,
+      role: user.role, // Include the user's role in the token payload
+    };
+  
+    return jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: '1h' });
+  }
 
 module.exports = resolvers;

@@ -1,37 +1,50 @@
 import { jwtDecode } from 'jwt-decode';
 
 class AuthService {
-  getProfile() {
-    return jwtDecode(this.getToken());
-  }
-
-  loggedIn() {
-    const token = this.getToken();
-    return token && !this.isTokenExpired(token) ? true : false;
-  }
-
-  isTokenExpired(token) {
-    const decoded = jwtDecode(token);
-    if (decoded.exp < Date.now() / 1000) {
-      localStorage.removeItem('id_token');
-      return true;
-    }
-    return false;
-  }
-
-  getToken() {
-    return localStorage.getItem('id_token');
-  }
-
+  // Store the token
   login(idToken) {
     localStorage.setItem('id_token', idToken);
     window.location.assign('/main');
   }
 
+  // Retrieve the user's profile from the token
+  getProfile() {
+    const token = this.getToken(); // Retrieve the token from local storage
+    if (!token) return null;
+    try {
+      const decoded = jwtDecode(token);
+      return decoded;
+    } catch (error) {
+      console.error("Token decoding error:", error);
+      return null;
+    }
+  }
+
+  // Check if the user is logged in
+  loggedIn() {
+    const token = this.getToken();
+    if (!token) return false;
+    const decoded = jwtDecode(token);
+    return decoded.exp > Date.now() / 1000;
+  }
+
+  // Get the token from local storage
+  getToken() {
+    return localStorage.getItem('id_token');
+  }
+
+  // Log out the user
   logout() {
     localStorage.removeItem('id_token');
-    window.location.reload();
+    window.location.assign('/');
+  }
+
+  // Check if the user is an admin
+  isAdmin() {
+    const profile = this.getProfile();
+    return profile && profile.role === 'admin';
   }
 }
 
-export default new AuthService();
+const authService = new AuthService();
+export default authService;

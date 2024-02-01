@@ -5,7 +5,7 @@ const MovieCard = ({ movie }) => {
   return (
     <Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden">
       {/* Use posterPath for the image source */}
-      <Image src={movie.posterPath} alt={`Cover for ${movie.title}`} />
+      <Image src="/images/tempimage.jpeg"  alt={`Cover for ${movie.title}`} />
 
       <Box p="6">
         <Box d="flex" alignItems="baseline">

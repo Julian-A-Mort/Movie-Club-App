@@ -36,6 +36,7 @@ function SignupModal({ isOpen, onClose }) {
         AuthService.login(data.signup.token); // Store the token and redirect
         setSuccessMsg('Thank you for signing up!');
         setErrorMsg('');
+        navigate('/main'); // Redirect to main page after successful signup
       }
     } catch (err) {
       console.error('Signup error:', err);
