@@ -1,33 +1,96 @@
 import React, { useState } from 'react';
-import { Box, Button } from '@chakra-ui/react';
-import Header from '../components/Header';
-import NavBar from '../components/NavBar';
-import EditModal from '../components/Modals/EditModal';
+import Banner from '../components/Header/index';
+import NavBar from '../components/NavBar/index';
+import { Box, Heading, Input, Button, VStack, HStack, List, ListItem, Text } from '@chakra-ui/react';
+import { useQuery } from '@apollo/client';
+import { GET_MOVIES, GET_USERS, GET_MEMBERSHIPS } from '../utils/queries';
 
 const AdminPage = () => {
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [modelType, setModelType] = useState('');
+  const [showMovies, setShowMovies] = useState(false);
+  const [showUsers, setShowUsers] = useState(false);
+  const [showMemberships, setShowMemberships] = useState(false);
 
-  const handleOpenEditModal = (type) => {
-    setModelType(type);
-    setIsEditModalOpen(true);
+  const { data: moviesData, loading: moviesLoading, error: moviesError } = useQuery(GET_MOVIES);
+  const { data: usersData, loading: usersLoading, error: usersError } = useQuery(GET_USERS);
+  const { data: membershipsData, loading: membershipsLoading, error: membershipsError } = useQuery(GET_MEMBERSHIPS);
+
+  // Function to handle "View All" button click for movies, users, and memberships
+  const handleViewAllMovies = () => setShowMovies(true);
+  const handleViewAllUsers = () => setShowUsers(true);
+  const handleViewAllMemberships = () => setShowMemberships(true);
+
+  // Functions to render movies, users, and memberships
+  const renderMovies = () => renderList(moviesData.movies, moviesLoading, moviesError, "movies");
+  const renderUsers = () => renderList(usersData.users, usersLoading, usersError, "users");
+  const renderMemberships = () => renderList(membershipsData.memberships, membershipsLoading, membershipsError, "memberships");
+
+  // Common function to render list items
+  const renderList = (data, loading, error, type) => {
+    console.log(data); // Log the data to see its structure
+  
+    if (loading) return <Text>Loading...</Text>;
+    if (error) return <Text>Error: {error.message}</Text>;
+    if (!data || !data[type] || data[type].length === 0) return <Text>None at the moment</Text>;
+  
+    return (
+      <List spacing={2}>
+        {data[type].map(item => (
+          <ListItem key={item._id}>{item.title || item.userName || item.description}</ListItem>
+        ))}
+      </List>
+    );
   };
+  
 
   return (
     <Box>
-      <Header />
+      <Banner />
       <NavBar />
-      <Box p={4}>
-        <Button colorScheme="blue" m={2} onClick={() => handleOpenEditModal('movies')}>Edit Movies</Button>
-        <Button colorScheme="green" m={2} onClick={() => handleOpenEditModal('events')}>Edit Events</Button>
-        <Button colorScheme="purple" m={2} onClick={() => handleOpenEditModal('users')}>Edit Users</Button>
-        <Button colorScheme="orange" m={2} onClick={() => handleOpenEditModal('memberships')}>Edit Memberships</Button>
+      {/* Movies Section */}
+      <Box border="1px" borderColor="gray.200" borderRadius="md" p={4} m={4} display="flex" flexDirection="column" alignItems="center">
+        <Heading mb={4}>Movie</Heading>
+        <VStack spacing={4} width="100%">
+          <Box>
+            <Heading size="sm" mb={2}>Search by Name</Heading>
+            <Input placeholder="Enter movie name" />
+          </Box>
+          <HStack spacing={4}>
+            <Button colorScheme="blue" onClick={handleViewAllMovies}>View All</Button>
+            <Button colorScheme="teal">Add New</Button>
+          </HStack>
+          {showMovies && renderMovies()}
+        </VStack>
       </Box>
-      <EditModal 
-        isOpen={isEditModalOpen} 
-        onClose={() => setIsEditModalOpen(false)} 
-        modelType={modelType} 
-      />
+      {/* Users Section */}
+      <Box border="1px" borderColor="gray.200" borderRadius="md" p={4} m={4} display="flex" flexDirection="column" alignItems="center">
+        <Heading mb={4}>Users</Heading>
+        <VStack spacing={4} width="100%">
+          <Box>
+            <Heading size="sm" mb={2}>Search by Name</Heading>
+            <Input placeholder="Enter user name" />
+          </Box>
+          <HStack spacing={4}>
+            <Button colorScheme="blue" onClick={handleViewAllUsers}>View All</Button>
+            <Button colorScheme="teal">Add New</Button>
+          </HStack>
+          {showUsers && renderUsers()}
+        </VStack>
+      </Box>
+      {/* Memberships Section */}
+      <Box border="1px" borderColor="gray.200" borderRadius="md" p={4} m={4} display="flex" flexDirection="column" alignItems="center">
+        <Heading mb={4}>Memberships</Heading>
+        <VStack spacing={4} width="100%">
+          <Box>
+            <Heading size="sm" mb={2}>Search by Name</Heading>
+            <Input placeholder="Enter membership title" />
+          </Box>
+          <HStack spacing={4}>
+            <Button colorScheme="blue" onClick={handleViewAllMemberships}>View All</Button>
+            <Button colorScheme="teal">Add New</Button>
+          </HStack>
+          {showMemberships && renderMemberships()}
+        </VStack>
+      </Box>
     </Box>
   );
 };

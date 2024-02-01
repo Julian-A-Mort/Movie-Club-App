@@ -14,16 +14,27 @@ const NavBar = () => {
 
   return (
     <Flex bg="blue.500" p={4} color="white">
-      {/* Other navigation items */}
-      {profile && profile.role === 'admin' && (
-        <Button as={Link} to="/admin" colorScheme="teal" variant="ghost" mr={3}>
-          Admin Page
+      <Box>
+        {/* Other navigation items */}
+        {profile && profile.role === 'admin' && (
+          <Button as={Link} to="/admin" colorScheme="teal" variant="ghost" mr={3}>
+            Admin Page
+          </Button>
+        )}
+        {/* Other buttons */}
+        <Button as={Link} to="/user" colorScheme="teal" variant="ghost" mr={3}>
+            User
+          </Button>
+          <Button as={Link} to="/allmovies" colorScheme="teal" variant="ghost" mr={3}>
+            All Movies
+          </Button>
+          <Button as={Link} to="/membership" colorScheme="teal" variant="ghost" mr={3}>
+            Membership
+          </Button>
+        <Button onClick={handleLogout} colorScheme="red" variant="ghost" mr={3}>
+          Logout
         </Button>
-      )}
-      {/* Other buttons */}
-      <Button onClick={handleLogout} colorScheme="red" variant="ghost" mr={3}>
-        Logout
-      </Button>
+      </Box>
     </Flex>
   );
 };
