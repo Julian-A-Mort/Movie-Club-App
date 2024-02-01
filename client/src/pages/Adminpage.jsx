@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Banner from '../components/Header/index';
 import NavBar from '../components/NavBar/index';
-import { Box, Heading, Input, Button, VStack, HStack, List, ListItem, Text } from '@chakra-ui/react';
+import { Box, Heading, Input, Button, VStack, HStack, Text, Flex } from '@chakra-ui/react';
 import { useQuery } from '@apollo/client';
 import { GET_MOVIES, GET_USERS, GET_MEMBERSHIPS } from '../utils/queries';
 
@@ -40,30 +40,32 @@ const AdminPage = () => {
     const filteredData = filterList(data[type], searchTerm);
 
     return (
-      <List spacing={2}>
+      <VStack spacing={4} align="stretch">
         {filteredData.map(item => (
-          <ListItem key={item._id}>
+          <Flex key={item._id} border="1px" borderColor="gray.200" borderRadius="md" p={4} align="center">
             {type === 'movies' && (
               <>
-                <Text>Title: {item.title}</Text>
-                <Text>Description: {item.description}</Text>
+                <Text flex={1} fontWeight="bold">{item.title}</Text>
+                <Text flex={3}>Description: {item.description}</Text>
               </>
             )}
             {type === 'users' && (
               <>
-                <Text>User Name: {item.userName}</Text>
-                <Text>Email: {item.email}</Text>
+                <Text flex={1} fontWeight="bold">{item.userName}</Text>
+                <Text flex={3}>Email: {item.email}</Text>
+                <Text flex={3}>First Name: {item.firstName}</Text>
+                <Text flex={3}>Last Name: {item.lastName}</Text>
               </>
             )}
             {type === 'memberships' && (
               <>
-                <Text>Title: {item.title}</Text>
-                <Text>Description: {item.description}</Text>
+                <Text flex={1} fontWeight="bold">{item.title}</Text>
+                <Text flex={3}>Description: {item.description}</Text>
               </>
             )}
-          </ListItem>
+          </Flex>
         ))}
-      </List>
+      </VStack>
     );
   };
 
