@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Button, Center, VStack } from '@chakra-ui/react';
 import Header from '../components/Header/index';
-import NavBar from '../components/NavBar/index';
 import LoginModal from '../components/Modals/LoginModal';
 import SignupModal from '../components/Modals/SignupModal';
 

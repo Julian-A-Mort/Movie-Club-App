@@ -1,5 +1,6 @@
+import '../index.css';
 import React from 'react';
-import { Box, Grid } from '@chakra-ui/react';
+import { Box, Grid, Flex, Heading, Spacer } from '@chakra-ui/react';
 import Banner from '../components/Header/index';
 import NavBar from '../components/NavBar/index';
 import MovieCard from '../components/Movie/index';
@@ -17,13 +18,24 @@ const MainPage = () => {
       <Banner /> {/* Banner at the top */}
       <NavBar /> {/* Navigation Bar below the banner */}
       
+      <Flex justify="center" align="center" bg="#DEDBD2" py={4}>
+        <Heading as="h1" size="xl">
+          Upcoming Movies!
+        </Heading>
+      </Flex>
+
       {/* Movie Cards Section */}
-      <Grid templateColumns="repeat(auto-fill, minmax(240px, 1fr))" gap={6} p={6}>
+      <Spacer />
+      <Grid templateColumns="repeat(auto-fill, minmax(240px, 1fr))" gap={6} p={6}  bg="#DEDBD2">
         {movies.map(movie => (
           <MovieCard key={movie.id} movie={movie} />
         ))}
       </Grid>
+      <Spacer />
+
     </Box>
+
+
   );
 };
 
