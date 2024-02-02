@@ -1,40 +1,47 @@
 import React from 'react';
-import { Box, Flex, Button, Spacer } from '@chakra-ui/react';
+import { Flex, Button, Spacer } from '@chakra-ui/react';
 import { Link, useNavigate } from 'react-router-dom';
-import AuthService from '../../utils/auth'; // Ensure this path matches where AuthService is defined
+import AuthService from '../../utils/auth'; 
 
 const NavBar = () => {
   const navigate = useNavigate(); // Used for navigation after logout
-  const profile = AuthService.getProfile(); // Correct variable name used here
+  const profile = AuthService.getProfile();
 
   const handleLogout = () => {
     AuthService.logout();
-    navigate('/'); // Navigate to home after logout if AuthService.logout doesn't handle redirection
+    navigate('/'); // Navigate to home after logout
   };
 
   return (
-    <Flex bg="blue.500" p={4} color="white">
-      <Box>
-        {/* Other navigation items */}
+    <Flex bg="#194C31" p={4} color="white" alignItems="center">
+      {/* Left-side navigation items */}
+     
+         <Spacer />
+
         {profile && profile.role === 'admin' && (
-          <Button as={Link} to="/admin" colorScheme="teal" variant="ghost" mr={3}>
+          <Button as={Link} to="/admin" colorScheme="#EFF1ED" variant="ghost" mr={3}>
             Admin Page
           </Button>
         )}
-        {/* Other buttons */}
-        <Button as={Link} to="/user" colorScheme="teal" variant="ghost" mr={3}>
-            User
-          </Button>
-          <Button as={Link} to="/allmovies" colorScheme="teal" variant="ghost" mr={3}>
-            All Movies
-          </Button>
-          <Button as={Link} to="/membership" colorScheme="teal" variant="ghost" mr={3}>
-            Membership
-          </Button>
-        <Button onClick={handleLogout} colorScheme="red" variant="ghost" mr={3}>
+
+        <Button as={Link} to="/user" colorScheme="#EFF1ED" variant="ghost" mr={3}>
+          User
+        </Button>
+
+        <Button as={Link} to="/allmovies" colorScheme="#EFF1ED" variant="ghost" mr={3}>
+          All Movies
+        </Button>
+
+        <Button as={Link} to="/membership" colorScheme="#EFF1ED" variant="ghost" mr={3}>
+          Membership
+        </Button>
+
+        <Button onClick={handleLogout} colorScheme="#EFF1ED" variant="ghost">
           Logout
         </Button>
-      </Box>
+
+      <Spacer />
+
     </Flex>
   );
 };
