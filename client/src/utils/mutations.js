@@ -89,7 +89,9 @@ export const UPDATE_MOVIE = gql`
       releaseYear
       genre
       director
-      image
+      posterPath
+      tmdbId
+      __typename
     }
   }
 `;

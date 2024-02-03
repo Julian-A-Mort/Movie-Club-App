@@ -2,17 +2,19 @@ import { gql } from '@apollo/client';
 
 // Queries
 export const GET_MOVIES = gql`
-  query GetMovies {
-    movies {
-      _id
-      title
-      description
-      releaseYear
-      genre
-      director
-      image
-    }
+query GetMovies {
+  movies {
+    _id
+    title
+    description
+    releaseYear
+    genre
+    director
+    posterPath
+    tmdbId
+    __typename
   }
+}
 `;
 
 export const GET_USERS = gql`

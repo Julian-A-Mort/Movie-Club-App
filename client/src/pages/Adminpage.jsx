@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/react';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_MOVIES, GET_USERS, GET_MEMBERSHIPS } from '../utils/queries';
-import { UPDATE_USER, ADD_USER, ADD_MOVIE } from '../utils/mutations';
+import { UPDATE_USER, ADD_USER, ADD_MOVIE, UPDATE_MOVIE } from '../utils/mutations';
 
 const AdminPage = () => {
   // State initialization
@@ -19,6 +19,7 @@ const AdminPage = () => {
   const [userSearchTerm, setUserSearchTerm] = useState('');
   const [membershipSearchTerm, setMembershipSearchTerm] = useState('');
   const [selectedUser, setSelectedUser] = useState({});
+  const [selectedMovie, setSelectedMovie] = useState({});
   const [newMovie, setNewMovie] = useState({
     title: '', description: '', releaseYear: '', genre: '', director: '', posterPath: '', tmdbId: ''
   });
@@ -36,6 +37,7 @@ const AdminPage = () => {
   const [updateUser] = useMutation(UPDATE_USER);
   const [addUser] = useMutation(ADD_USER);
   const [addMovie] = useMutation(ADD_MOVIE);
+  const [updatedMovie] = useMutation(UPDATE_MOVIE);
 
   // Modal handler
   const handleOpenModalForNew = (type) => {
@@ -65,6 +67,23 @@ const AdminPage = () => {
     onOpen();
   };
 
+  const handleEditMovie = (movie) => {
+    setSelectedMovie(movie);
+    // Populate the newMovie state with the selected movie's details
+    setNewMovie({
+      title: movie.title,
+      description: movie.description,
+      releaseYear: movie.releaseYear.toString(), // Ensure releaseYear is a string for the input
+      genre: movie.genre,
+      director: movie.director,
+      posterPath: movie.posterPath || '', // Use an empty string if posterPath is undefined
+      tmdbId: movie.tmdbId || '' // Use an empty string if tmdbId is undefined
+    });
+    setModalType('movie');
+    onOpen();
+  };
+  
+
   // Handle save changes
   const handleSaveChanges = async () => {
     if (modalType === 'user') {
@@ -78,19 +97,20 @@ const AdminPage = () => {
         toast({ title: `Error ${selectedUser?._id ? 'updating' : 'adding'} user.`, description: error.message, status: 'error' });
       }
     } else if (modalType === 'movie') {
+      const operation = selectedMovie?._id ? updatedMovie : addMovie;
+      const variables = modalType === 'movie' && selectedMovie?._id ? { id: selectedMovie._id, ...newMovie } : { ...newMovie };
+  
       try {
-        await addMovie({
-          variables: { ...newMovie },
+        await operation({
+          variables,
         });
-        toast({ title: 'Movie added successfully.', status: 'success' });
+        toast({ title: `Movie ${selectedMovie?._id ? 'updated' : 'added'} successfully.`, status: 'success' });
       } catch (error) {
-        toast({ title: 'Error adding movie.', description: error.message, status: 'error' });
+        toast({ title: `Error ${selectedMovie?._id ? 'updating' : 'adding'} movie.`, description: error.message, status: 'error' });
       }
     }
     onClose();
-    setModalType('');
-    setSelectedUser({});
-    setNewMovie({ title: '', description: '', releaseYear: '', genre: '', director: '', posterPath: '', tmdbId: '' });
+    resetFormState();
   };
 
   // Reset form state
@@ -129,10 +149,12 @@ const AdminPage = () => {
         {filteredData.map(item => (
           <Flex key={item._id} border="1px" borderColor="gray.200" borderRadius="md" p={4} align="center">
             {type === 'movies' && (
-              <>
-                <Text flex={1} fontWeight="bold">{item.title}</Text>
-           i     <Text flex={3}>Description: {item.description}</Text>
-              </>
+            <>
+            <Text flex={1} fontWeight="bold">{item.title}</Text>
+            <Text flex={1}>Year: {item.releaseYear}</Text>
+            <Text flex={1}>Genre: {item.genre}</Text>
+            <Button colorScheme="teal" ml="auto" onClick={() => handleEditMovie(item)}>Edit</Button>
+          </>
             )}
             {type === 'users' && (
               <>
