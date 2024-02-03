@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, Center, VStack } from '@chakra-ui/react';
+import { Box, Button, VStack } from '@chakra-ui/react';
 import Header from '../components/Header/index';
 import LoginModal from '../components/Modals/LoginModal';
 import SignupModal from '../components/Modals/SignupModal';
@@ -15,18 +15,16 @@ function LandingPage() {
   const closeSignupModal = () => setIsSignupOpen(false);
 
   return (
-    <Box>
+    <Box bg="#DEDBD2" minHeight="100vh">
       <Header />
-      <Center py={5}>
-        <VStack spacing={4}>
-          <Button colorScheme="blue" onClick={openLoginModal}>
-            Login
-          </Button>
-          <Button colorScheme="green" onClick={openSignupModal}>
-            Signup
-          </Button>
-        </VStack>
-      </Center>
+      <VStack spacing={4} p={8} >
+        <Button colorScheme="blue" bg="#14213D" onClick={openLoginModal}>
+          Login
+        </Button>
+        <Button colorScheme="green" bg="#A4031F" onClick={openSignupModal}>
+          Signup
+        </Button>
+      </VStack>
       <LoginModal isOpen={isLoginOpen} onClose={closeLoginModal} />
       <SignupModal isOpen={isSignupOpen} onClose={closeSignupModal} />
     </Box>

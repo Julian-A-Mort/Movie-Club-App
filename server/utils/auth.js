@@ -32,6 +32,7 @@ const authMiddleware = (req, res, next) => {
             console.log('Invalid token');
         }
     }
+
     next();
 };
 

@@ -15,26 +15,10 @@ if (!process.env.JWT_SECRET || !process.env.MONGODB_URI) {
 
 const app = express();
 
-// const uri = process.env.MONGODB_URI;
-// const client = new MongoClient(uri, {
-//   serverApi: ServerApiVersion.v1
-// });
-
 // Mongoose connection 
 mongoose.connect(process.env.MONGODB_URI)
 .then(() => console.log("MongoDB successfully connected"))
 .catch(err => console.error("MongoDB connection error:", err));
-
-// //connect to MongoDB
-// async function connectToMongoDB() {
-//     try {
-//       await client.connect();
-//       console.log("Connected to MongoDB");
-  
-//     } catch (error) {
-//       console.error("Failed to connect to MongoDB", error);
-//     }
-//   }
 
 // Body parsers for JSON and URL-encoded data
 app.use(express.json());

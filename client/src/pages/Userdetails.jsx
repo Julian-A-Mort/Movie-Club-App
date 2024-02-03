@@ -28,12 +28,12 @@ const Userdetails = () => {
     const user = data?.user; // Adjust to match your GraphQL query response structure
 
     return (
-        <Box>
+        <Box bg="#DEDBD2" minHeight="100vh">
             <Banner />
             <NavBar />
-            <Flex direction="column" align="center" mt={10}>
+            <Flex direction="column" align="center" mt={10} >
                 <Heading as="h2" size="xl" mb={4}>User Details</Heading>
-                <Box p={5} shadow="md" borderWidth="1px" borderRadius="md">
+                <Box p={5} shadow="md" borderWidth="1px" borderRadius="md" bg='white' >
                     <Heading as="h3" size="lg">{user?.userName || "No Name"}</Heading>
                     <Text mt={4}>Email: {user?.email || "No Email"}</Text>
                     <Text mt={2}>Username: {user?.username || "No Username"}</Text>

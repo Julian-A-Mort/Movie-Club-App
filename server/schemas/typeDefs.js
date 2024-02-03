@@ -67,6 +67,16 @@ const typeDefs = `
             email: String
         ): User
 
+        addUser(
+            userName: String!, 
+            email: String!, 
+            password: String!, 
+            firstName: String!, 
+            lastName: String!
+        ): AuthPayload!
+
+          
+
         deleteUser(_id: ID!): User
 
         addMovie(

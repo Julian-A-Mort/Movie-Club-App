@@ -49,6 +49,21 @@ export const DELETE_USER = gql`
   }
 `;
 
+export const ADD_USER = gql`
+  mutation AddUser($userName: String!, $firstName: String!, $lastName: String!, $email: String!, $password: String!) {
+    addUser(userName: $userName, firstName: $firstName, lastName: $lastName, email: $email, password: $password) {
+      token
+      user {
+        _id
+        userName
+        firstName
+        lastName
+        email
+      }
+    }
+  }
+`;
+
 // Movie Mutations
 export const ADD_MOVIE = gql`
   mutation AddMovie($title: String!, $description: String!, $releaseYear: Int!, $genre: String!, $director: String!, $image: String!) {

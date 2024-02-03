@@ -54,14 +54,25 @@ const resolvers = {
         }
     },
 
+    addUser: async (parent, { userName, firstName, lastName, email, password }) => {
+      try {
+          const newUser = await User.create({ userName, firstName, lastName, email, password });
+          const token = signToken(newUser);
+          
+          console.log(`AddUser Success: `, { newUser, token });
+          return { token, newUser }; // Depending on your client's needs, you might not need to return a token here
+      } catch (error) {
+          console.error(`AddUser Error: `, error);
+          throw new Error('Error adding user');
+      }
+  },
+
+
     updateUser: async (parent, { _id, userName, firstName, lastName, email }, context) => {
-        if (!context.user) {
-            throw new AuthenticationError('You need to be logged in');
-        }
-        if (context.user._id.toString() === _id || context.user.role === 'admin') {
+        // if (context.user._id.toString() === _id || context.user.role === 'admin') {
             return await User.findByIdAndUpdate(_id, { userName, firstName, lastName, email }, { new: true });
-        }
-        throw new AuthenticationError('Not authorized');
+        // }
+        // throw new AuthenticationError('Not authorized');
     },
     
 
@@ -153,5 +164,4 @@ const resolvers = {
   
     return jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: '1h' });
   }
-
 module.exports = resolvers;
