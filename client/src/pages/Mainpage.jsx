@@ -1,4 +1,3 @@
-import '../index.css';
 import React from 'react';
 import { Box, Grid, Flex, Heading, Spacer } from '@chakra-ui/react';
 import Banner from '../components/Header/index';

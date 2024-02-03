@@ -20,6 +20,11 @@ class AuthService {
     }
   }
 
+  getCurrentUser() {
+    const profile = this.getProfile();
+    return profile;
+  }
+
   // Check if the user is logged in
   loggedIn() {
     const token = this.getToken();

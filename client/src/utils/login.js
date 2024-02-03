@@ -15,7 +15,6 @@ const useLogin = () => {
       });
 
       if (data.login.token) {
-        // Assuming AuthService is updated to handle new auth logic
         AuthService.login(data.login.token); // Store token and handle user login
       }
     } catch (error) {

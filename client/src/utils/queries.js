@@ -56,3 +56,29 @@ export const GET_EVENTS = gql`
     }
   }
 `;
+
+export const GET_USERS_BY_ROLE = gql`
+  query GetUsersByRole {
+    users(role: $role) {
+      _id
+      title
+      description
+      date
+      role
+    }
+  }
+`;
+
+export const GET_USER = gql`
+query GetUser($userId: ID!) {
+  user(_id: $userId) {
+      _id
+      userName
+      firstName
+      lastName
+      email
+      role
+    }
+  }
+`;
+

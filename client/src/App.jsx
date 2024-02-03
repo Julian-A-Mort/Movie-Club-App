@@ -2,8 +2,11 @@ import './App.css';
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/Landing';
-import AdminPage from './pages/Adminpage'; // Ensure correct import
-import MainPage from './pages/Mainpage'; // Ensure correct import
+import AdminPage from './pages/Adminpage'; 
+import MainPage from './pages/Mainpage'; 
+import AllMovies from './pages/AllMovies'; 
+import Userdetails from './pages/Userdetails';
+import Membership from './pages/Membership';
 import LoginModal from './components/Modals/LoginModal';
 import SignupModal from './components/Modals/SignupModal';
 import ProtectedRoute from './components/ProtectedPage';
@@ -21,6 +24,9 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage onOpenLogin={() => setIsLoginOpen(true)} onOpenSignup={() => setIsSignupOpen(true)} />} />
         <Route path="/main" element={<MainPage />} />
+        <Route path="/allmovies" element={<AllMovies />} />
+        <Route path="/user" element={<Userdetails />} />
+        <Route path="/membership" element={<Membership />} />
         <Route path="/admin" element={<ProtectedRoute element={<AdminPage />} />} />
         {/* Add other routes as needed */}
       </Routes>
