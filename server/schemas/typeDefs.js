@@ -16,7 +16,8 @@ const typeDefs = `
         releaseYear: Int!
         genre: String!
         director: String!
-        image: String
+        posterPath: String
+        tmdbId: String      
     }
 
     type Membership {
@@ -46,6 +47,7 @@ const typeDefs = `
         users: [User]
         user(_id: ID!): User
         movies: [Movie]
+        movie(_id: ID!): Movie
         memberships: [Membership]
         events: [Event]
     }
@@ -82,11 +84,12 @@ const typeDefs = `
         addMovie(
             title: String!
             description: String!
-            releaseYear: Int!
+            releaseYear: String!
             genre: String!
             director: String!
-            image: String
-        ): Movie
+            posterPath: String,
+            tmdbId: String
+          ): Movie!
 
         updateMovie(
             _id: ID!

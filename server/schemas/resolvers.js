@@ -81,17 +81,28 @@ const resolvers = {
     },
 
     //movie mutations
-    addMovie: async (parent, { title, description, releaseYear, genre, director, image }, context) => {
-        if (!context.user || context.user.role !== 'admin') {
-            throw new AuthenticationError('You need to be logged in and must be an admin');
-        }
-        return await Movie.create({ title, description, releaseYear, genre, director, image });
+    addMovie: async (_, { title, description, releaseYear, genre, director, posterPath, tmdbId }) => {
+      try {
+          const newMovie = await Movie.create({
+            title,
+            description,
+            releaseYear,
+            genre,
+            director,
+            posterPath,
+            tmdbId
+          });
+          
+          console.log(`AddMovie Success: `, newMovie);
+          return newMovie; // Directly return the new movie object
+      } catch (error) {
+          console.error(`AddMovie Error: `, error);
+          throw new Error('Error adding movie');
+      }
     },
+    
 
     updateMovie: async (parent, { _id, title, description, releaseYear, genre, director, image }, context) => {
-        if (!context.user || context.user.role !== 'admin') {
-            throw new AuthenticationError('You need to be logged in and must be an admin');
-        }
         return await Movie.findByIdAndUpdate(_id, { title, description, releaseYear, genre, director, image }, { new: true });
     },    
 
@@ -118,9 +129,6 @@ const resolvers = {
     },    
 
     updateEvent: async (parent, { _id, title, description, date, movie }, context) => {
-        if (!context.user || context.user.role !== 'admin') {
-            throw new AuthenticationError('You need to be logged in and must be an admin');
-        }
         return await Event.findByIdAndUpdate(_id, { title, description, date, movie }, { new: true });
     },    
 

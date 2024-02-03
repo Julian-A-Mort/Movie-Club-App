@@ -66,17 +66,18 @@ export const ADD_USER = gql`
 
 // Movie Mutations
 export const ADD_MOVIE = gql`
-  mutation AddMovie($title: String!, $description: String!, $releaseYear: Int!, $genre: String!, $director: String!, $image: String!) {
-    addMovie(title: $title, description: $description, releaseYear: $releaseYear, genre: $genre, director: $director, image: $image) {
-      _id
-      title
-      description
-      releaseYear
-      genre
-      director
-      image
-    }
+mutation AddMovie($title: String!, $description: String!, $releaseYear: String!, $genre: String!, $director: String!, $posterPath: String, $tmdbId: String) {
+  addMovie(title: $title, description: $description, releaseYear: $releaseYear, genre: $genre, director: $director, posterPath: $posterPath, tmdbId: $tmdbId) {
+    _id
+    title
+    description
+    releaseYear
+    genre
+    director
+    posterPath
+    tmdbId
   }
+}
 `;
 
 export const UPDATE_MOVIE = gql`

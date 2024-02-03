@@ -14,7 +14,7 @@ const movieSchema = new Schema({
         trim: true
     },
     releaseYear: {
-        type: Number,
+        type: String,
         required: true,
     },
     genre: {
@@ -28,7 +28,7 @@ const movieSchema = new Schema({
     },
     posterPath: {
         type: String,
-        required: true
+        required: false
     },
     tmdbId: { 
         type: String,
