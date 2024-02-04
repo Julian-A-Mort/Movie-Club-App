@@ -3,11 +3,6 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const membershipSchema = new Schema({
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    },
     title: {
         type: String,
         required: true,
@@ -15,24 +10,39 @@ const membershipSchema = new Schema({
     },
     description: {
         type: String,
-        required: true,
         trim: true
     },
     startDate: {
         type: Date,
         default: Date.now,
-        required: true
     },
     endDate: {
         type: Date,
-        required: true
     },
-    status: {
-        type: String,
-        enum: ['active', 'expired'],
-        default: 'active'
+    price: {
+        type: Number,
     }
 }, { timestamps: true });
+
+// Pre save middleware to set endDate
+membershipSchema.pre('save', function(next) {
+    if (!this.startDate) {
+        this.startDate = new Date();
+    }
+
+    const endDate = new Date(this.startDate);
+    endDate.setMonth(endDate.getMonth() + 3); 
+
+    this.endDate = endDate;
+    next();
+});
+
+// Fetch price
+membershipSchema.statics.fetchPriceFromModel = async function () {
+    const membership = await this.findOne({});
+    return membership.price;
+  };
+    
 
 const Membership = mongoose.model('Membership', membershipSchema);
 

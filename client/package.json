@@ -13,6 +13,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "chalk": "^5.3.0",
+    "formik": "^2.4.5",
     "framer-motion": "^11.0.3",
     "graphql": "^16.8.1",
     "jsonwebtoken": "^9.0.2",

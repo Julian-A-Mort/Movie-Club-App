@@ -24,6 +24,15 @@ const resolvers = {
       }
       throw new AuthenticationError('Not authenticated');
     },
+    getPrice: async () => {
+      try {
+        const membership = await Membership.findOne({});
+        return membership.price * 100; // Assuming price is stored as a dollar amount and needs to be converted to cents
+      } catch (error) {
+        console.error(error);
+        throw new Error('Failed to fetch price');
+      }
+    },
     users: async () => {
         const users = await User.find().populate('memberships');
         return users;
@@ -111,12 +120,12 @@ const resolvers = {
     },
 
     //membership mutations
-    addMembership: async (parent, { title, description, startDate, endDate, status, userId }, context) => {
-        return await Membership.create({ title, description, startDate, endDate, status, userId });
+    addMembership: async (parent, { title, description, startDate, endDate, price }, context) => {
+        return await Membership.create({ title, description, startDate, endDate, price });
     },
 
-    updateMembership: async (parent, { _id, title, description, startDate, endDate, status }, context) => {
-        return await Membership.findByIdAndUpdate(_id, { title, description, startDate, endDate, status }, { new: true });
+    updateMembership: async (parent, { title, description, startDate, endDate, price }, context) => {
+        return await Membership.findByIdAndUpdate(_id, { title, description, startDate, endDate, price }, { new: true });
     },
 
     deleteMembership: async (parent, { _id }, context) => {

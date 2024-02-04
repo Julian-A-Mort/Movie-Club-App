@@ -10,16 +10,16 @@ import Membership from './pages/Membership';
 import LoginModal from './components/Modals/LoginModal';
 import SignupModal from './components/Modals/SignupModal';
 import ProtectedRoute from './components/ProtectedPage';
-// Optional: import NavBar from './components/NavBar';
-
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 function App() {
-  // State for controlling login and signup modals
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
+  const stripePromise = loadStripe('pk_live_3w8Ofr6RzBcFvQESz5CIOdn7');
 
   return (
     <Router>
-      {/* Optional: NavBar component can be placed here if it should be displayed across all pages */}
+      <Elements stripe={stripePromise}>
 
       <Routes>
         <Route path="/" element={<LandingPage onOpenLogin={() => setIsLoginOpen(true)} onOpenSignup={() => setIsSignupOpen(true)} />} />
@@ -28,12 +28,12 @@ function App() {
         <Route path="/user" element={<Userdetails />} />
         <Route path="/membership" element={<Membership />} />
         <Route path="/admin" element={<ProtectedRoute element={<AdminPage />} />} />
-        {/* Add other routes as needed */}
       </Routes>
 
       {/* Login and Signup Modals */}
       <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
       <SignupModal isOpen={isSignupOpen} onClose={() => setIsSignupOpen(false)} />
+      </Elements>
     </Router>
   );
 }

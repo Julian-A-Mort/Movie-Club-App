@@ -23,12 +23,12 @@ const typeDefs = `
     type Membership {
         _id: ID!
         title: String!
-        description: String!
-        startDate: String!
-        endDate: String!
-        status: String!
-        userId: ID!
+        description: String
+        startDate: String
+        endDate: String
+        price: Float
     }
+    
 
     type Event {
         _id: ID!
@@ -50,6 +50,7 @@ const typeDefs = `
         movie(_id: ID!): Movie
         memberships: [Membership]
         events: [Event]
+        getPrice: Float
     }
 
     type Mutation {
@@ -109,16 +110,15 @@ const typeDefs = `
             description: String
             startDate: String
             endDate: String
-            status: String
+            price: Float
         ): Membership
 
         addMembership(
-            userId: ID!
             title: String!
-            description: String!
-            startDate: String!
-            endDate: String!
-            status: String!
+            description: String
+            startDate: String
+            endDate: String
+            price: Float
           ): Membership
 
         deleteMembership(_id: ID!): Membership

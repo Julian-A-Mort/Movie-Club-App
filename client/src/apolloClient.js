@@ -8,15 +8,17 @@ const httpLink = createHttpLink({
 });
 
 const authLink = setContext((_, { headers }) => {
+  const token = AuthService.getToken();
+  if (token) {
+      return {
+          headers: {
+              ...headers,
+              authorization: `Bearer ${token}`,
+          },
+      };
+  }
 
-    const token = AuthService.getToken(); // Use AuthService to get the token
-    return {
-      headers: {
-        ...headers,
-        Authorization: `Bearer ${token}`,
-      }
-    };
-
+  return { headers };
 });
 
 const client = new ApolloClient({

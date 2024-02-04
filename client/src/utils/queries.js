@@ -38,8 +38,7 @@ export const GET_MEMBERSHIPS = gql`
       description
       startDate
       endDate
-      status
-      userId
+      price
     }
   }
 `;

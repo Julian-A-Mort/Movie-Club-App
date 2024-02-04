@@ -1,11 +1,13 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const { ApolloServer } = require('apollo-server-express');
-// const { MongoClient, ServerApiVersion } = require('mongodb'); not required?
 const mongoose = require('mongoose');
 const path = require('path');
 const { typeDefs, resolvers } = require('./schemas');
 const { authMiddleware } = require('./utils/auth');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const Membership = require('./models/Membership');
 
 
 if (!process.env.JWT_SECRET || !process.env.MONGODB_URI) {
@@ -14,6 +16,7 @@ if (!process.env.JWT_SECRET || !process.env.MONGODB_URI) {
 }
 
 const app = express();
+app.use(cors());
 
 // Mongoose connection 
 mongoose.connect(process.env.MONGODB_URI)
@@ -31,8 +34,9 @@ app.use(authMiddleware);
 const apolloServer = new ApolloServer({
     typeDefs,
     resolvers,
-    context: ({ req }) => ({ user: req.user }) // Pass the user context to resolvers
+    context: ({ req }) => ({ user: req.user }) 
 });
+
 
 async function startServer() {
     await apolloServer.start();
@@ -53,5 +57,23 @@ async function startServer() {
         console.log(`Server is running on http://localhost:${PORT}`);
     });
 }
+
+// Stripe payment intent
+app.post('/create-payment-intent', async (req, res) => {
+    try {
+        const { amount } = req.body;
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount,
+            currency: 'aud',
+        });
+
+        res.send({
+            clientSecret: paymentIntent.client_secret,
+        });
+    } catch (error) {
+        console.error('Error creating payment intent:', error);
+        res.status(500).send({ error: error.message });
+    }
+});
 
 startServer();
