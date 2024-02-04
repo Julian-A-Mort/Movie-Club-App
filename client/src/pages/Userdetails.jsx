@@ -11,9 +11,9 @@ const Userdetails = () => {
 
     useEffect(() => {
         const currentUser = authService.getCurrentUser(); // Retrieve current user's profile
-        if (currentUser && currentUser._id) {
-            console.log("User ID:", currentUser._id); // Log to check the ID
-            setUserId(currentUser._id); // Set the userId state if _id is available
+        if (currentUser && currentUser.id) {
+            console.log("User ID:", currentUser.id); // Log to check the ID
+            setUserId(currentUser.id); // Set the userId state if _id is available
         }
     }, []);
 

@@ -83,4 +83,3 @@ query GetUser($userId: ID!) {
     }
   }
 `;
-

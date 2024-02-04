@@ -8,7 +8,7 @@ const httpLink = createHttpLink({
 });
 
 const authLink = setContext((_, { headers }) => {
-  if (AuthService.loggedIn()) {
+
     const token = AuthService.getToken(); // Use AuthService to get the token
     return {
       headers: {
@@ -16,11 +16,7 @@ const authLink = setContext((_, { headers }) => {
         Authorization: `Bearer ${token}`,
       }
     };
-  } else {
-    // Optional: Redirect to login or handle unauthenticated state
-    console.log("Token is expired or not present. Redirecting to login.");
-    // Redirect to login or perform other action. Be cautious with redirects here to avoid infinite loops.
-  }
+
 });
 
 const client = new ApolloClient({
