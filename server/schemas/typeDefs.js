@@ -85,7 +85,7 @@ const typeDefs = `
         addMovie(
             title: String!
             description: String!
-            releaseYear: String!
+            releaseYear: Int!
             genre: String!
             director: String!
             posterPath: String,
@@ -96,7 +96,7 @@ const typeDefs = `
             _id: ID!
             title: String
             description: String
-            releaseYear: String
+            releaseYear: Int
             genre: String
             director: String
             posterPath: String

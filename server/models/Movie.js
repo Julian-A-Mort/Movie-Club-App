@@ -1,3 +1,4 @@
+const { interpolate } = require('framer-motion');
 const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
@@ -14,7 +15,7 @@ const movieSchema = new Schema({
         trim: true
     },
     releaseYear: {
-        type: String,
+        type: Number,
         required: true,
     },
     genre: {

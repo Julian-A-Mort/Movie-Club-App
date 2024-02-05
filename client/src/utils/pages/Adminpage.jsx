@@ -73,11 +73,11 @@ const AdminPage = () => {
     setNewMovie({
       title: movie.title,
       description: movie.description,
-      releaseYear: movie.releaseYear.toString(), // Ensure releaseYear is a string for the input
+      releaseYear: movie.releaseYear,
       genre: movie.genre,
       director: movie.director,
-      posterPath: movie.posterPath || '', // Use an empty string if posterPath is undefined
-      tmdbId: movie.tmdbId || '' // Use an empty string if tmdbId is undefined
+      posterPath: movie.posterPath || '', 
+      tmdbId: movie.tmdbId || ''
     });
     setModalType('movie');
     onOpen();
@@ -99,6 +99,9 @@ const AdminPage = () => {
     } else if (modalType === 'movie') {
       const operation = selectedMovie?._id ? updatedMovie : addMovie;
       const variables = modalType === 'movie' && selectedMovie?._id ? { id: selectedMovie._id, ...newMovie } : { ...newMovie };
+      if (selectedMovie?._id) {
+        variables._id = selectedMovie._id;
+      }
   
       try {
         await operation({
@@ -369,8 +372,11 @@ const AdminPage = () => {
       )}
     </ModalBody>
     <ModalFooter>
+    <Button colorScheme="red" mr={3} onClick={() => handleDeleteMovie()}>
+    Delete Movie
+  </Button>
       <Button colorScheme="blue" mr={3} onClick={() => handleSaveChanges()}>
-        {modalType === 'user' ? (selectedUser?._id ? 'Save Changes' : 'Add User') : 'Add Movie'}
+        {modalType === 'user' ? (selectedUser?._id ? 'Save Changes' : 'Add User') : (selectedMovie?._id ? 'Edit Movie' : 'Add Movie')}
       </Button>
       <Button onClick={() => { onClose(); setModalType(''); }}>Cancel</Button>
     </ModalFooter>
