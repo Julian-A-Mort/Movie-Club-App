@@ -15,7 +15,7 @@ function LandingPage() {
   const closeSignupModal = () => setIsSignupOpen(false);
 
   return (
-    <Box bg="#DEDBD2" minHeight="100vh">
+    <Box bg="#194C31" minHeight="100vh">
       <Header />
       <VStack spacing={4} p={8} >
         <Button colorScheme="blue" bg="#14213D" onClick={openLoginModal}>

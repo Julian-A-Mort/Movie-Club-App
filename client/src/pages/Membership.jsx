@@ -17,7 +17,7 @@ const Membership = () => {
   const memberships = data?.memberships || [];
 
   return (
-    <Box bg="#DEDBD2" minHeight="100vh">
+    <Box bg="#DEDBD2" minHeight="100vh" pb={10}> 
       <Banner /> {/* Banner at the top */}
       <NavBar /> {/* Navigation Bar below the banner */}
 
@@ -40,7 +40,6 @@ const Membership = () => {
     </Box>
   ))}
           <CheckoutComponent />
-
 </Flex>
 </Box>
 );

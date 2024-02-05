@@ -1,20 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import '@stripe/stripe-js';
-import '@stripe/react-stripe-js';
-import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
-import { useQuery, gql } from '@apollo/client';
-import { Formik, Field, Form } from 'formik';
-
+import React, { useState } from 'react';
 import {
   Box,
   Button,
   FormControl,
   FormLabel,
   Input,
-  Alert,
-  AlertIcon,
-  VStack
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  VStack,
 } from '@chakra-ui/react';
+import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
+import { useQuery, gql } from '@apollo/client';
+import { Formik, Field, Form } from 'formik';
 
 const FETCH_PRICE_QUERY = gql`
   query GetPrice {
@@ -51,10 +54,12 @@ const CARD_ELEMENT_OPTIONS = {
   };
   
 
-const CheckoutForm = () => {
-  const stripe = useStripe();
-  const elements = useElements();
-  const { data, loading, error } = useQuery(FETCH_PRICE_QUERY);
+  const CheckoutForm = () => {
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const stripe = useStripe();
+    const elements = useElements();
+    const { data, loading, error } = useQuery(FETCH_PRICE_QUERY);
+  
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     if (!stripe || !elements || !data?.getPrice) {
@@ -94,36 +99,56 @@ const CheckoutForm = () => {
 
 
   return (
-    <Box p={4} bg="gray.100" boxShadow="sm" borderRadius="md">
-      <Formik
-        initialValues={{ email: '', name: '' }}
-        onSubmit={handleSubmit}
-      >
-        {({ isSubmitting }) => (
-          <Form>
-            <VStack spacing={4}>
-              <FormControl>
-                <FormLabel htmlFor="email">Email</FormLabel>
-                <Field as={Input} id="email" name="email" placeholder="Email" />
-              </FormControl>
-              <FormControl>
-                <FormLabel htmlFor="name">Name</FormLabel>
-                <Field as={Input} id="name" name="name" placeholder="Name on card" />
-              </FormControl>
-              <FormControl>
-                <FormLabel>Card Details</FormLabel>
-                <Box p={2} bg="white" borderRadius="md">
-                  <CardElement options={CARD_ELEMENT_OPTIONS} />
-                </Box>
-              </FormControl>
-              <Button mt={4} colorScheme="teal" isLoading={isSubmitting} type="submit" disabled={!stripe || loading}>
-                Pay
-              </Button>
-            </VStack>
-          </Form>
-        )}
-      </Formik>
-    </Box>
+    <>
+      <Button onClick={onOpen} colorScheme="blue">Purchase Now</Button>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Complete Your Purchase</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {/* Formik and form content remain largely unchanged, just wrapped in ModalBody */}
+            <Box p={4} bg="gray.100" boxShadow="sm" borderRadius="md">
+              <Formik
+                initialValues={{ email: '', name: '' }}
+                onSubmit={handleSubmit}
+              >
+                {({ isSubmitting }) => (
+                  <Form>
+                    <VStack spacing={4}>
+                      <FormControl>
+                        <FormLabel htmlFor="email">Email</FormLabel>
+                        <Field as={Input} id="email" name="email" placeholder="Email" />
+                      </FormControl>
+                      <FormControl>
+                        <FormLabel htmlFor="name">Name</FormLabel>
+                        <Field as={Input} id="name" name="name" placeholder="Name on card" />
+                      </FormControl>
+                      <FormControl>
+                        <FormLabel>Card Details</FormLabel>
+                        <Box p={2} bg="white" borderRadius="md">
+                          <CardElement options={CARD_ELEMENT_OPTIONS} />
+                        </Box>
+                      </FormControl>
+                      <Button mt={4} colorScheme="teal" isLoading={isSubmitting} type="submit" disabled={!stripe || loading}>
+                        Pay
+                      </Button>
+                    </VStack>
+                  </Form>
+                )}
+              </Formik>
+            </Box>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 

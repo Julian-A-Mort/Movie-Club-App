@@ -24,12 +24,16 @@ const NavBar = () => {
           </Button>
         )}
 
-        <Button as={Link} to="/user" colorScheme="#EFF1ED" variant="ghost" mr={3}>
+        {/* <Button as={Link} to="/user" colorScheme="#EFF1ED" variant="ghost" mr={3}>
           User
+        </Button> */}
+
+        <Button as={Link} to="/main" colorScheme="#EFF1ED" variant="ghost" mr={3}>
+          Main Page
         </Button>
 
         <Button as={Link} to="/allmovies" colorScheme="#EFF1ED" variant="ghost" mr={3}>
-          All Movies
+          Upcoming Movies
         </Button>
 
         <Button as={Link} to="/membership" colorScheme="#EFF1ED" variant="ghost" mr={3}>
