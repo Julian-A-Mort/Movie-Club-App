@@ -10,7 +10,7 @@
     "client": "cd client && npm start",
     "server": "cd server && npm start",
     "install": "cd server && npm i && cd ../client && npm i --include=dev",
-    "render-build": "npm install && npm run build",
+    "render-build": "cd client && npm install && cd ../server && npm install && cd .. && npm run build",
     "install-all": "npm install && cd client && npm install && cd ../server && npm install"
   },
   "keywords": [],
