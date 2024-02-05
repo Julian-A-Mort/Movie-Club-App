@@ -1,4 +1,3 @@
-const { interpolate } = require('framer-motion');
 const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
