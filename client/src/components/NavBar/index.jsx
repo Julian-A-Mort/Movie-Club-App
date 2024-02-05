@@ -13,14 +13,14 @@ const NavBar = () => {
   };
 
   return (
-    <Flex bg="#194C31" p={4} color="white" alignItems="center">
+    <Flex bg="black" p={4} color="#C9F2C7" alignItems="center">
       {/* Left-side navigation items */}
      
          <Spacer />
 
         {profile && profile.role === 'admin' && (
           <Button as={Link} to="/admin" colorScheme="#EFF1ED" variant="ghost" mr={3}>
-            Admin Page
+            ADMIN PAGE
           </Button>
         )}
 
@@ -29,19 +29,19 @@ const NavBar = () => {
         </Button> */}
 
         <Button as={Link} to="/main" colorScheme="#EFF1ED" variant="ghost" mr={3}>
-          Main Page
+          MAIN PAGE
         </Button>
 
         <Button as={Link} to="/allmovies" colorScheme="#EFF1ED" variant="ghost" mr={3}>
-          Upcoming Movies
+          UPCOMING MOVIES
         </Button>
 
         <Button as={Link} to="/membership" colorScheme="#EFF1ED" variant="ghost" mr={3}>
-          Membership
+          MEMBERSHIP
         </Button>
 
         <Button onClick={handleLogout} colorScheme="#EFF1ED" variant="ghost">
-          Logout
+          LOGOUT
         </Button>
 
       <Spacer />

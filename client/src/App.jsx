@@ -12,6 +12,7 @@ import SignupModal from './components/Modals/SignupModal';
 import ProtectedRoute from './components/ProtectedPage';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import './style.css';
 
 import '@stripe/stripe-js';
 import '@stripe/react-stripe-js';

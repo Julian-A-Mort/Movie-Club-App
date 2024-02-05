@@ -10,8 +10,9 @@ const Header = () => {
         <Image src={BannerImage} alt="Banner" width="100%" />
   
         {/* Centered Logo on Green Background */}
-        <Center bg="#194C31" p={4}>
-        <Image src={logoImage} alt="Logo"  />
+        <Center bg="#194C31" p={0} w="100%"> {/* Remove padding to allow image to stretch fully and ensure width is 100% */}
+          <Image src={logoImage} alt="Logo" width="100%" height="auto" objectFit="contain" /> {/* Adjust width and objectFit */}
+
         </Center>
       </Box>
     );
