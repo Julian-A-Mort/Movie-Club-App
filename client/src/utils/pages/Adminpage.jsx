@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/react';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_MOVIES, GET_USERS, GET_MEMBERSHIPS } from '../../utils/queries';
-import { UPDATE_USER, ADD_USER, ADD_MOVIE, UPDATE_MOVIE } from '../../utils/mutations';
+import { UPDATE_USER, ADD_USER, ADD_MOVIE, UPDATE_MOVIE, DELETE_MOVIE } from '../../utils/mutations';
 
 const AdminPage = () => {
   // State initialization
@@ -38,6 +38,7 @@ const AdminPage = () => {
   const [addUser] = useMutation(ADD_USER);
   const [addMovie] = useMutation(ADD_MOVIE);
   const [updatedMovie] = useMutation(UPDATE_MOVIE);
+  const [deleteMovie] = useMutation(DELETE_MOVIE);
 
   // Modal handler
   const handleOpenModalForNew = (type) => {
@@ -123,6 +124,22 @@ const AdminPage = () => {
     setNewMovie({ title: '', description: '', releaseYear: '', genre: '', director: '', posterPath: '', tmdbId: '' });
   };
 
+  //Delete movie
+  const handleDeleteMovie = async () => {
+    if (selectedMovie?._id) {
+      try {
+        await deleteMovie({
+          variables: { _id: selectedMovie._id },
+        });
+        toast({ title: 'Movie deleted successfully.', status: 'success' });
+        // You can also add logic here to update the UI or refetch data if needed.
+      } catch (error) {
+        toast({ title: 'Error deleting movie.', description: error.message, status: 'error' });
+      }
+      onClose();
+      resetFormState();
+    }
+  };
 
   //view and search
   const handleViewAllMovies = () => setShowMovies(true);
