@@ -96,10 +96,11 @@ const typeDefs = `
             _id: ID!
             title: String
             description: String
-            releaseYear: Int
+            releaseYear: String
             genre: String
             director: String
-            image: String
+            posterPath: String
+            tmdbId: String
         ): Movie
 
         deleteMovie(_id: ID!): Movie

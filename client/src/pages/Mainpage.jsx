@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Grid, Flex, Heading, Spacer, Text } from '@chakra-ui/react';
 import Banner from '../components/Header/index';
 import NavBar from '../components/NavBar/index';
-import MovieCard from '../components/Movie/index';
+import MovieCard from '../components/Movie/singlemovie';
 
 // Dummy data for movie cards
 const movies = [
@@ -19,7 +19,6 @@ const MainPage = () => {
         {/* <Heading as="h1" size="xl" mb={4}>WELCOME</Heading> */}
         <Text fontSize="lg" px={4} textAlign="center">
           we are a small film society based in marrickville
-          l
         </Text>
       </Flex>
 

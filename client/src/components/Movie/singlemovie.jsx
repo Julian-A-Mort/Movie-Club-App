@@ -1,11 +1,19 @@
-import React from 'react';
-import { Box, Image, Text, Badge } from '@chakra-ui/react';
+//not used but started if needed later
 
-const MovieCard = ({ movie }) => {
+import React from 'react';
+import { Box, Image, Badge } from '@chakra-ui/react';
+import DefaultImage from '../../images/Temp.jpeg';
+
+const SingleMovieCard = ({ movie }) => {
+  const posterURL = movie.posterPath ? `https://image.tmdb.org/t/p/w500${movie.posterPath}` : DefaultImage;
+
   return (
     <Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden">
-      {/* Use posterPath for the image source */}
-      <Image src="/images/tempimage.jpeg"  alt={`Cover for ${movie.title}`} />
+      <Image 
+        src={posterURL}  
+        alt={`Cover for ${movie.title}`} 
+        fallbackSrc={DefaultImage}
+      />
 
       <Box p="6">
         <Box d="flex" alignItems="baseline">
@@ -45,4 +53,4 @@ const MovieCard = ({ movie }) => {
   );
 };
 
-export default MovieCard;
+export default SingleMovieCard;

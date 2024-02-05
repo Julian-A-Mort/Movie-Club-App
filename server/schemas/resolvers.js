@@ -4,6 +4,8 @@ const axios = require('axios');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+async function fetchMovieDetails(tmdbId) {
+}
 // const stripe = require('stripe')('insert numbers');
 
 const resolvers = {
@@ -42,13 +44,6 @@ const resolvers = {
 
 
   Mutation: {
-    //user mutations
-    // signup: async (parent, { userName, firstName, lastName, email, password }) => {
-    //     const user = await User.create({ userName, firstName, lastName, email, password });
-    //     const token = signToken(user);
-    //     return { token, user };
-    // },
-
     signup: async (parent, { userName, firstName, lastName, email, password }) => {
         console.log(`Signup Request: `, { userName, firstName, lastName, email, password });
         try {
@@ -58,7 +53,6 @@ const resolvers = {
             return { token, user };
         } catch (error) {
             console.error(`Signup Error: `, error);
-            // You might want to handle different types of errors differently
             throw new Error('Error signing up');
         }
     },
@@ -69,7 +63,7 @@ const resolvers = {
           const token = signToken(newUser);
           
           console.log(`AddUser Success: `, { newUser, token });
-          return { token, newUser }; // Depending on your client's needs, you might not need to return a token here
+          return { token, newUser };
       } catch (error) {
           console.error(`AddUser Error: `, error);
           throw new Error('Error adding user');
@@ -91,28 +85,31 @@ const resolvers = {
 
     //movie mutations
     addMovie: async (_, { title, description, releaseYear, genre, director, posterPath, tmdbId }) => {
-      try {
-          const newMovie = await Movie.create({
-            title,
-            description,
-            releaseYear,
-            genre,
-            director,
-            posterPath,
-            tmdbId
-          });
-          
-          console.log(`AddMovie Success: `, newMovie);
-          return newMovie; // Directly return the new movie object
-      } catch (error) {
-          console.error(`AddMovie Error: `, error);
-          throw new Error('Error adding movie');
+  
+      // Fetch the poster path from TMDB
+      const fetchedPosterPath = await fetchMovieDetails(tmdbId);
+    
+      if (!fetchedPosterPath) {
+        throw new Error('Failed to fetch movie details from TMDB');
       }
+    
+      // Create a new movie with the fetched poster path and other movie data
+      const newMovie = await Movie.create({
+        title,
+        description,
+        releaseYear,
+        genre,
+        director,
+        posterPath: `https://image.tmdb.org/t/p/w500${fetchedPosterPath}`, // Use the fetched poster path
+        tmdbId
+      });
+    
+      return newMovie;
     },
     
 
-    updateMovie: async (parent, { _id, title, description, releaseYear, genre, director, image }, context) => {
-        return await Movie.findByIdAndUpdate(_id, { title, description, releaseYear, genre, director, image }, { new: true });
+    updateMovie: async (parent, { _id, title, description, releaseYear, genre, director, posterPath, tmdbId }, context) => {
+        return await Movie.findByIdAndUpdate(_id, { title, description, releaseYear, genre, director, posterPath, tmdbId }, { new: true });
     },    
 
     deleteMovie: async (parent, { _id }, context) => {
