@@ -9,8 +9,8 @@
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "client": "cd client && npm start",
     "server": "cd server && npm start",
-    "install": "cd server && npm i && cd ../client && npm i",
-    "render-build":"npm install && npm run build",
+    "install": "cd server && npm i && cd ../client && npm i --include=dev",
+    "render-build": "npm install && npm run build",
     "install-all": "npm install && cd client && npm install && cd ../server && npm install"
   },
   "keywords": [],
@@ -36,6 +36,7 @@
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
-    "nodemon": "^3.0.3"
+    "nodemon": "^3.0.3",
+    "vite": "^5.0.12"
   }
 }
