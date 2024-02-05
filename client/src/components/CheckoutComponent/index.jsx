@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import '@stripe/stripe-js';
+import '@stripe/react-stripe-js';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useQuery, gql } from '@apollo/client';
 import { Formik, Field, Form } from 'formik';
+
 import {
   Box,
   Button,
@@ -19,28 +22,7 @@ const FETCH_PRICE_QUERY = gql`
   }
 `;
 
-// Define the appearance customization for Stripe Elements
-const appearance = {
-    theme: 'stripe',
-    variables: {
-      colorPrimary: '#0570de',
-      colorBackground: '#ffffff',
-      colorText: '#30313d',
-      colorDanger: '#df1b41',
-      fontFamily: 'Ideal Sans, system-ui, sans-serif',
-      spacingUnit: '2px',
-      borderRadius: '4px',
-    },
-    rules: {
-      '.Input': {
-        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
-      },
-      '.Input--invalid': {
-        borderColor: 'var(--colorDanger)',
-        boxShadow: '0 0 0 1px var(--colorDanger)',
-      },
-    }
-  };
+
 
 // Customize your Card Element styling
 const CARD_ELEMENT_OPTIONS = {
