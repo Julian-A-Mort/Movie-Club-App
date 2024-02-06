@@ -24,11 +24,9 @@ const MainPage = () => {
 
       {/* Movie Cards Section */}
       <Spacer />
-      <Grid templateColumns="repeat(auto-fill, minmax(240px, 1fr))" gap={6} p={6}  bg="#194C31">
-        {movies.map(movie => (
-          <MovieCard key={movie.id} movie={movie} />
-        ))}
-      </Grid>
+      <MovieCard />
+
+
       <Spacer />
 
     </Box>
