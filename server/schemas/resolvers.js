@@ -5,7 +5,18 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 async function fetchMovieDetails(tmdbId) {
+  const apiKey = process.env.MOVIE_API_KEY; // Ensure your API key is stored in an environment variable
+  try {
+    const url = `https://api.themoviedb.org/3/movie/${tmdbId}?api_key=${apiKey}`;
+    const response = await axios.get(url);
+    return response.data.poster_path; // Assuming you only need the poster path
+  } catch (error) {
+    console.error('Error fetching movie details from TMDB:', error.message);
+    throw new Error('Failed to fetch movie details from TMDB');
+  }
 }
+
+
 // const stripe = require('stripe')('insert numbers');
 
 const resolvers = {
@@ -85,25 +96,26 @@ const resolvers = {
 
     //movie mutations
     addMovie: async (_, { title, description, releaseYear, genre, director, posterPath, tmdbId }) => {
-  
-      // Fetch the poster path from TMDB
-      const fetchedPosterPath = await fetchMovieDetails(tmdbId);
-    
-      if (!fetchedPosterPath) {
-        throw new Error('Failed to fetch movie details from TMDB');
+      let fetchedPosterPath = posterPath; // Use provided posterPath by default
+
+      if (tmdbId) { // Only fetch from TMDB if tmdbId is provided
+        const tmdbPosterPath = await fetchMovieDetails(tmdbId);
+        if (tmdbPosterPath) {
+          fetchedPosterPath = `https://image.tmdb.org/t/p/w500${tmdbPosterPath}`;
+        }
       }
-    
-      // Create a new movie with the fetched poster path and other movie data
+
+      // Create a new movie with the provided or fetched poster path and other movie data
       const newMovie = await Movie.create({
         title,
         description,
         releaseYear,
         genre,
         director,
-        posterPath: `https://image.tmdb.org/t/p/w500${fetchedPosterPath}`, // Use the fetched poster path
+        posterPath: fetchedPosterPath, // Use the fetched or provided poster path
         tmdbId
       });
-    
+
       return newMovie;
     },
     

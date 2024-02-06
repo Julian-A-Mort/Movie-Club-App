@@ -74,7 +74,7 @@ const AdminPage = () => {
     setNewMovie({
       title: movie.title,
       description: movie.description,
-      releaseYear: movie.releaseYear,
+      releaseYear: parseInt(newMovie.releaseYear, 10), // Ensure this is an integer
       genre: movie.genre,
       director: movie.director,
       posterPath: movie.posterPath || '', 
@@ -99,14 +99,23 @@ const AdminPage = () => {
       }
     } else if (modalType === 'movie') {
       const operation = selectedMovie?._id ? updatedMovie : addMovie;
-      const variables = modalType === 'movie' && selectedMovie?._id ? { id: selectedMovie._id, ...newMovie } : { ...newMovie };
+      const variables = {
+        // Other fields remain unchanged
+        title: newMovie.title,
+        description: newMovie.description,
+        releaseYear: parseInt(newMovie.releaseYear, 10), // Parse as integer
+        genre: newMovie.genre,
+        director: newMovie.director,
+        posterPath: newMovie.posterPath,
+        tmdbId: newMovie.tmdbId
+      };      
       if (selectedMovie?._id) {
         variables._id = selectedMovie._id;
       }
   
       try {
         await operation({
-          variables,
+          variables: selectedMovie?._id ? { id: selectedMovie._id, ...variables } : variables,
         });
         toast({ title: `Movie ${selectedMovie?._id ? 'updated' : 'added'} successfully.`, status: 'success' });
       } catch (error) {
