@@ -3,9 +3,6 @@ import { setContext } from '@apollo/client/link/context';
 import AuthService from '../src/utils/auth';
 import { onError } from "@apollo/client/link/error";
 
-
-import { createHttpLink } from '@apollo/client';
-
 const httpLink = createHttpLink({
   uri: import.meta.env.VITE_API_URI || 'http://localhost:4000/graphql'
 });
