@@ -1,0 +1,76 @@
+# Goblin Movie Club Managment App
+
+## Description
+
+The Movie Club Management App is a comprehensive solution designed to streamline the management of movie club operations. Built with the MERN stack (MongoDB, Express.js, React, and Node.js), this app offers a user-friendly interface that enables club administrators to manage members, promote upcoming events, and handle memberships seamlessly. 
+
+With integration of the TMDB API for movie details and Stripe for payment processing, it provides an easy to use interactive experience for both administrators and members. 
+
+## Table of Contents
+
+- [Features](#features)
+- [Installation](#installation)
+- [Technologies](#technologies)
+- [Usage](#usage)
+- [Deployment](#deployment)
+- [Screenshots](#screenshots)
+- [License](#license)
+- [Contact](#contact)
+
+## Features
+
+- Member Management: Register, log in, and manage member profiles.
+- Event Promotion: Create, update, and promote upcoming movie events.
+- Membership Handling: Purchase and manage club memberships with secure payment processing via Stripe.
+- Interactive UI: A polished and responsive user interface built with Chakra UI.
+- Real-time Data: Utilizes GraphQL for efficient data retrieval and manipulation.
+- Secure Authentication: Implements JWT for secure user authentication.
+- Mobile Responsive: Ensures a seamless experience across all devices.
+
+
+## Installation
+
+1. Clone the repo:
+```
+git clone https://github.com/Julian-A-Mort/Movie-Club-App
+```
+
+2. install the necessary dependencies (in both root, server and client directories)
+```
+npm install
+```
+
+3. Set up environmental variables for MongoDB URI, JWT secrets, Stripe API keys, and TMDB API key in .env files.
+
+4. Start the server (in the root directory)
+
+```
+npm run start
+```
+
+## Technologies
+Frontend: React.js with Chakra UI for styling
+Backend: Node.js and Express.js server
+Database: MongoDB with Mongoose ODM
+APIs: TMDB for movie details, Stripe for payment processing
+Authentication: JWT for secure login and session management
+
+## Usage
+After starting the application:
+
+Visit http://localhost:3000 to view the client application.
+Use the search bar to search for books.
+Sign up/Log in to save books to your personal reading list.
+View and delete books from your reading list.
+
+## Deployment
+This app is deployed on Render. Visit [https://goblin-movie-club-app.onrender.com/] to access the live application.
+
+## Screenshots
+![Main Page](./client/public/images/screenshot_goblinapp.jpg)
+
+## License
+This project is licensed to me.
+
+## Contact
+If you have any questions about this repo, then please open an issue or contact me on GitHub at [Julian-A-Mort] (https://github.com/Julian-A-Mort) 
