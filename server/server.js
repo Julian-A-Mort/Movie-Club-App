@@ -56,22 +56,22 @@ async function startServer() {
   });
 }
 
-// Stripe payment intent
-app.post('/create-payment-intent', async (req, res) => {
-  try {
-    const { amount } = req.body;
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount,
-      currency: 'aud',
-    });
+// // Stripe payment intent
+// app.post('/create-payment-intent', async (req, res) => {
+//   try {
+//     const { amount } = req.body;
+//     const paymentIntent = await stripe.paymentIntents.create({
+//       amount,
+//       currency: 'aud',
+//     });
 
-    res.send({
-      clientSecret: paymentIntent.client_secret,
-    });
-  } catch (error) {
-    console.error('Error creating payment intent:', error);
-    res.status(500).send({ error: error.message });
-  }
-});
+//     res.send({
+//       clientSecret: paymentIntent.client_secret,
+//     });
+//   } catch (error) {
+//     console.error('Error creating payment intent:', error);
+//     res.status(500).send({ error: error.message });
+//   }
+// });
 
 startServer();
